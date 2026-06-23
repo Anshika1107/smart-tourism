@@ -169,12 +169,35 @@ function doTranslate() {
   if (match && match[target]) {
     document.getElementById('transOutput').textContent = match[target];
     document.getElementById('transRoman').textContent = target === 'hi' && match.roman_hi ? 'Pronunciation: ' + match.roman_hi : '';
+    document.getElementById('transResultBox').classList.remove('hidden');
   } else {
-    document.getElementById('transOutput').textContent = '[Connect Google Translate API for full translation]';
-    document.getElementById('transRoman').textContent = '💡 Try: hello, hospital, water, food, taxi, left, right';
-    showToast('Phrase not in offline dictionary — try simple words', 'info');
+    // Call Google Translate API
+    document.getElementById('transOutput').textContent = 'Translating via Google Translate...';
+    document.getElementById('transRoman').textContent = '🌍 Connecting to translation servers...';
+    document.getElementById('transResultBox').classList.remove('hidden');
+
+    const source = currentSourceLang; // 'en' or 'hi'
+    fetch(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=${source}&tl=${target}&dt=t&q=${encodeURIComponent(raw)}`)
+      .then(res => {
+        if (!res.ok) throw new Error('Google Translation API failed');
+        return res.json();
+      })
+      .then(data => {
+        if (data && data[0]) {
+          const translated = data[0].map(s => s[0]).join('');
+          document.getElementById('transOutput').textContent = translated;
+          document.getElementById('transRoman').textContent = '✨ Translated by Google Translate';
+        } else {
+          throw new Error('Invalid translation format');
+        }
+      })
+      .catch(err => {
+        console.error('Translation error:', err);
+        document.getElementById('transOutput').textContent = '[Translation Failed]';
+        document.getElementById('transRoman').textContent = '💡 Check your network or try offline words: hello, hospital, water, food';
+        showToast('Google Translation failed. Try offline dictionary words.', 'error');
+      });
   }
-  document.getElementById('transResultBox').classList.remove('hidden');
 }
 
 function getLangName(c) { return {hi:'Hindi',en:'English',fr:'French',es:'Spanish',de:'German',ja:'Japanese',mr:'Marathi',gu:'Gujarati'}[c]||c; }
