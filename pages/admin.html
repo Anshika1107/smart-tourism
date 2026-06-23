@@ -8,10 +8,20 @@
     (function() {
       const user = JSON.parse(localStorage.getItem('sts_user') || 'null');
       const token = localStorage.getItem('sts_token');
+      const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+      
+      // Prevent offline token leakage in production
+      if (token === 'offline-admin-token' && !isLocal) {
+        localStorage.removeItem('sts_token');
+        localStorage.removeItem('sts_user');
+        window.location.reload();
+        return;
+      }
+
       if (!token || !user || user.role !== 'admin') {
         const password = prompt('Access Denied: Restricted Area. Please enter the Admin Password to proceed:');
         if (password === 'admin123') {
-          const API_BASE = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' ? 'http://localhost:5000' : '';
+          const API_BASE = isLocal ? 'http://localhost:5000' : '';
           // Authenticate programmatically to fetch a valid JWT token
           fetch(`${API_BASE}/api/auth/login`, {
             method: 'POST',
@@ -31,11 +41,16 @@
             }
           })
           .catch(err => {
-            // Fallback for local offline simulation
-            localStorage.setItem('sts_token', 'offline-admin-token');
-            localStorage.setItem('sts_user', JSON.stringify({ name: 'Admin User', email: 'admin@smarttourism.in', role: 'admin' }));
-            alert('Offline Admin access granted!');
-            window.location.reload();
+            if (isLocal) {
+              // Fallback for local offline simulation only
+              localStorage.setItem('sts_token', 'offline-admin-token');
+              localStorage.setItem('sts_user', JSON.stringify({ name: 'Admin User', email: 'admin@smarttourism.in', role: 'admin' }));
+              alert('Offline Admin access granted!');
+              window.location.reload();
+            } else {
+              alert('Connection failed. Server may be offline or starting up. Please try again.');
+              window.location.href = 'login.html';
+            }
           });
         } else {
           alert('Invalid password. Access denied.');
@@ -249,7 +264,7 @@
         <h1>🚨 SOS Alert Management</h1>
         <p>Monitor and respond to emergency alerts from tourists</p>
       </div>
-      <div style="display:flex;gap:16px;margin-bottom:24px;flex-wrap:wrap">
+      <div class="stats-row" style="display:flex;gap:16px;margin-bottom:24px;flex-wrap:wrap">
         <div class="stat-card" style="flex:1;min-width:150px">
           <div class="stat-icon" style="background:rgba(231,76,60,0.15)">🚨</div>
           <div><div class="value" style="color:var(--danger)">3</div><div class="label">Active Alerts</div></div>
@@ -414,6 +429,28 @@
   const API_BASE = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' ? 'http://localhost:5000' : '';
   const token = localStorage.getItem('sts_token');
   const headers = { 'Authorization': 'Bearer ' + token, 'Content-Type': 'application/json' };
+
+  // Intercept fetch calls to dynamically manage token updates and handle 401 errors
+  const originalFetch = window.fetch;
+  window.fetch = function(url, options = {}) {
+    if (options.headers && options.headers.Authorization) {
+      options.headers.Authorization = 'Bearer ' + (localStorage.getItem('sts_token') || '');
+    }
+    return originalFetch(url, options).then(res => {
+      if (res.status === 401) {
+        handleAuthError();
+        throw new Error('Unauthorized');
+      }
+      return res;
+    });
+  };
+
+  function handleAuthError() {
+    localStorage.removeItem('sts_token');
+    localStorage.removeItem('sts_user');
+    alert('Session expired or unauthorized. Please re-authenticate.');
+    window.location.reload();
+  }
 
   function showAdminTab(name) {
     document.querySelectorAll('[id^="admin-"]').forEach(t => t.classList.add('hidden'));
@@ -749,13 +786,13 @@
       .then(res => res.json())
       .then(data => {
         if (data.success) {
-          const counts = { hotel: 0, restaurant: 0, attraction: 0, shop: 0 };
+          const counts = { hotel: 0, restaurant: 0, attraction: 0, shop: 0, transport: 0 };
           data.listings.forEach(l => {
             if (counts[l.category] !== undefined) counts[l.category]++;
           });
           const total = data.listings.length || 1;
           
-          const colors = { hotel: 'var(--deep-teal)', restaurant: 'var(--saffron)', attraction: 'var(--accent)', shop: 'var(--danger)' };
+          const colors = { hotel: 'var(--deep-teal)', restaurant: 'var(--saffron)', attraction: 'var(--accent)', shop: 'var(--danger)', transport: 'var(--gold)' };
           
           const barsHtml = Object.keys(counts).map(cat => {
             const pct = Math.round((counts[cat] / total) * 100);

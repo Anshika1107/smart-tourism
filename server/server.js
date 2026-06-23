@@ -117,6 +117,13 @@ app.get('/api/auth/me', protect, (req, res) => {
   res.json({ success: true, user: formatUserForFrontend(req.user) });
 });
 
+// DELETE /api/auth/me (self-deactivation)
+app.delete('/api/auth/me', protect, (req, res) => {
+  db.prepare('UPDATE users SET is_active = ? WHERE id = ?').run(0, req.user.id);
+  res.json({ success: true, message: 'Account deactivated successfully.' });
+});
+
+
 // PUT /api/auth/profile
 app.put('/api/auth/profile', protect, (req, res) => {
   const { name, email, phone, emergencyContacts } = req.body;

@@ -163,7 +163,7 @@
       const user = getUser();
       if (!user) return;
       try {
-        const res = await apiCall(`/admin/users/${user.id}`, 'DELETE', null, true);
+        const res = await apiCall('/auth/me', 'DELETE', null, true);
         showToast('Account deactivated. Logging out...', 'info');
         setTimeout(() => { logout(); }, 1500);
       } catch (err) {

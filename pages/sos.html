@@ -54,7 +54,14 @@
 
     <!-- EMERGENCY CONTACTS -->
     <h2 style="color:white;font-family:'Playfair Display',serif;font-size:1.6rem;margin-bottom:20px;text-align:center">📞 Emergency Contacts – Indore</h2>
-    <div class="emergency-contacts" style="margin-bottom:40px">
+    <div class="emergency-contacts" style="margin-bottom:40px" id="emergencyContactsGrid">
+      <div class="contact-card" onclick="callContact('Primary Hotline', getPrimaryHotline())" style="border: 2px solid var(--danger); background: rgba(231,76,60,0.1); border-radius: var(--radius)">
+        <div class="icon" style="animation: sos-pulse 2s infinite; display: inline-block;">🚨</div>
+        <div class="name" style="color: #ff8a80; font-weight: bold;">Primary SOS Hotline</div>
+        <div class="number" id="primaryHotlineDisplay">+91 98765 43210</div>
+        <button class="btn btn-danger btn-sm mt-2" style="width:100%;justify-content:center">📞 Call Now</button>
+      </div>
+
       <div class="contact-card" onclick="callContact('Police','100')">
         <div class="icon">👮</div>
         <div class="name">Police</div>
@@ -145,7 +152,14 @@
 <script>
   let userEmergencyContacts = [];
 
+  function getPrimaryHotline() {
+    return localStorage.getItem('sts_hotline') || '+91 98765 43210';
+  }
+
   document.addEventListener('DOMContentLoaded', () => {
+    const display = document.getElementById('primaryHotlineDisplay');
+    if (display) display.textContent = getPrimaryHotline();
+    
     loadMyContacts();
   });
 
