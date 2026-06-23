@@ -708,6 +708,18 @@ app.listen(PORT, () => {
   console.log(`📋  API Docs:  http://localhost:${PORT}/api`);
   console.log(`🏥  Health:    http://localhost:${PORT}/api/health`);
   console.log(`📁  Database:  ${DB_PATH}`);
+
+  // Auto-seed if database is empty
+  try {
+    const userCountResult = queries.users.count.get();
+    if (!userCountResult || userCountResult.total === 0) {
+      console.log('\n🌱 No users found. Automatically seeding sample data...');
+      require('./config/seed-sqlite');
+    }
+  } catch (e) {
+    console.log('\n⚠️ Automatic seeding skipped or failed:', e.message);
+  }
+
   console.log(`\n💡  First time? Run this to fill the database:`);
   console.log(`    npm run seed:sqlite\n`);
 });
