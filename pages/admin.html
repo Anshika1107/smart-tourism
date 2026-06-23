@@ -11,8 +11,9 @@
       if (!token || !user || user.role !== 'admin') {
         const password = prompt('Access Denied: Restricted Area. Please enter the Admin Password to proceed:');
         if (password === 'admin123') {
+          const API_BASE = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' ? 'http://localhost:5000' : '';
           // Authenticate programmatically to fetch a valid JWT token
-          fetch('http://localhost:5000/api/auth/login', {
+          fetch(`${API_BASE}/api/auth/login`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ email: 'admin@smarttourism.in', password: 'admin123' })

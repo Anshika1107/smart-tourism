@@ -1,5 +1,5 @@
 // ===== SMART TOURISM INDORE - API CONNECTOR =====
-const API_BASE = 'http://localhost:5000/api';
+const API_BASE = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' ? 'http://localhost:5000/api' : '/api';
 const getToken = () => localStorage.getItem('sts_token');
 const setToken = (t) => localStorage.setItem('sts_token', t);
 const setUser  = (u) => localStorage.setItem('sts_user', JSON.stringify(u));
@@ -629,7 +629,7 @@ function initChatbot() {
     messagesDiv.scrollTop = messagesDiv.scrollHeight;
 
     try {
-      const res = await fetch('http://localhost:5000/api/chat', {
+      const res = await fetch(`${API_BASE}/chat`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ message: msg })
