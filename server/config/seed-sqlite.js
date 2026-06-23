@@ -143,4 +143,6 @@ console.log('   2. Open: server/data/smart_tourism.db');
 console.log('   3. You\'ll see all tables and data like a spreadsheet!\n');
 console.log('🚀 Now run: npm run dev\n');
 
-db.close();
+if (require.main === module) {
+  db.close();
+}
