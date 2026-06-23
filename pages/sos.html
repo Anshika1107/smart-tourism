@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SOS Emergency – Smart Tourism Indore</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    .sos-hero { background:linear-gradient(135deg,#1a0000,#3d0000); min-height:100vh; padding-top:72px; }
+    .sos-container { max-width:900px; margin:0 auto; padding:60px 24px; }
+    .sos-title { font-family:'Playfair Display',serif; font-size:2.4rem; color:white; text-align:center; margin-bottom:8px; }
+    .sos-sub { color:rgba(255,100,100,0.8); text-align:center; margin-bottom:48px; font-size:1rem; }
+    .sos-status { background:rgba(231,76,60,0.15); border:2px solid rgba(231,76,60,0.4); border-radius:var(--radius); padding:24px; text-align:center; color:white; }
+    .safety-tip { background:rgba(255,255,255,0.07); border-radius:var(--radius-sm); padding:16px 20px; color:rgba(255,255,255,0.85); font-size:0.9rem; display:flex; gap:12px; align-items:flex-start; margin-bottom:10px; }
+  </style>
+</head>
+<body>
+<nav class="navbar" style="background:rgba(26,0,0,0.95);border-bottom:1px solid rgba(231,76,60,0.2)">
+  <a href="../index.html" class="nav-logo">
+    <div class="logo-icon">🗺</div>
+    <span style="color:white">Smart Tourism Indore</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="../index.html" style="color:rgba(255,255,255,0.7)">Home</a></li>
+    <li><a href="trip-planner.html" style="color:rgba(255,255,255,0.7)">Plan Trip</a></li>
+    <li><a href="explore.html" style="color:rgba(255,255,255,0.7)">Explore</a></li>
+    <li><a href="sos.html" style="color:var(--danger)">🚨 Safety</a></li>
+  </ul>
+  <div class="nav-actions">
+    <a href="dashboard.html" class="btn btn-outline btn-sm" style="color:white;border-color:rgba(255,255,255,0.3)">Dashboard</a>
+  </div>
+</nav>
+
+<div class="sos-hero">
+  <div class="sos-container">
+    <h1 class="sos-title">🚨 Emergency SOS</h1>
+    <p class="sos-sub">In an emergency, press the button below to instantly alert authorities and your emergency contacts.</p>
+
+    <!-- SOS BUTTON -->
+    <div class="sos-btn-wrap">
+      <button class="sos-btn" id="sosBtn" onclick="triggerSOS()">
+        <span class="sos-icon">🆘</span>
+        <span>SOS</span>
+      </button>
+      <p style="color:rgba(255,255,255,0.5);margin-top:16px;font-size:0.88rem">Hold or tap to send emergency alert with your GPS location</p>
+    </div>
+
+    <!-- SOS STATUS (hidden by default) -->
+    <div id="sosStatus" class="sos-status hidden" style="margin-bottom:32px">
+      <div style="font-size:2rem;margin-bottom:8px">📡</div>
+      <h3 style="color:white;margin-bottom:8px">SOS Alert Sent!</h3>
+      <p>Your location has been shared with Police, Nearby Hospital, and your Emergency Contacts.</p>
+      <p style="margin-top:8px;color:rgba(255,200,200,0.8);font-size:0.88rem">Help is on the way. Stay calm and stay in a safe location.</p>
+    </div>
+
+    <!-- EMERGENCY CONTACTS -->
+    <h2 style="color:white;font-family:'Playfair Display',serif;font-size:1.6rem;margin-bottom:20px;text-align:center">📞 Emergency Contacts – Indore</h2>
+    <div class="emergency-contacts" style="margin-bottom:40px">
+      <div class="contact-card" onclick="callContact('Police','100')">
+        <div class="icon">👮</div>
+        <div class="name">Police</div>
+        <div class="number">100</div>
+        <button class="btn btn-danger btn-sm mt-2" style="width:100%;justify-content:center">📞 Call Now</button>
+      </div>
+      <div class="contact-card" onclick="callContact('Ambulance','108')">
+        <div class="icon">🚑</div>
+        <div class="name">Ambulance</div>
+        <div class="number">108</div>
+        <button class="btn btn-danger btn-sm mt-2" style="width:100%;justify-content:center">📞 Call Now</button>
+      </div>
+      <div class="contact-card" onclick="callContact('Fire Brigade','101')">
+        <div class="icon">🚒</div>
+        <div class="name">Fire Brigade</div>
+        <div class="number">101</div>
+        <button class="btn btn-danger btn-sm mt-2" style="width:100%;justify-content:center">📞 Call Now</button>
+      </div>
+      <div class="contact-card" onclick="callContact('Women Helpline','1091')">
+        <div class="icon">👩</div>
+        <div class="name">Women Helpline</div>
+        <div class="number">1091</div>
+        <button class="btn btn-danger btn-sm mt-2" style="width:100%;justify-content:center">📞 Call Now</button>
+      </div>
+      <div class="contact-card" onclick="callContact('Tourist Helpline','1363')">
+        <div class="icon">🗺</div>
+        <div class="name">Tourist Helpline</div>
+        <div class="number">1363</div>
+        <button class="btn btn-danger btn-sm mt-2" style="width:100%;justify-content:center">📞 Call Now</button>
+      </div>
+      <div class="contact-card" onclick="callContact('Disaster Management','1070')">
+        <div class="icon">⚠️</div>
+        <div class="name">Disaster Mgmt</div>
+        <div class="number">1070</div>
+        <button class="btn btn-danger btn-sm mt-2" style="width:100%;justify-content:center">📞 Call Now</button>
+      </div>
+    </div>
+
+    <!-- MY EMERGENCY CONTACTS -->
+    <div style="background:rgba(255,255,255,0.05);border-radius:var(--radius);padding:28px;margin-bottom:40px">
+      <div class="flex items-center justify-between mb-3">
+        <h3 style="color:white;font-family:'Playfair Display',serif;">👥 My Emergency Contacts</h3>
+        <button class="btn btn-sm" style="background:rgba(231,76,60,0.3);color:white" onclick="openModal('addContactModal')">+ Add Contact</button>
+      </div>
+      <div id="myContacts">
+        <p style="color:rgba(255,255,255,0.6);text-align:center;font-size:0.9rem;padding:12px;">Loading emergency contacts...</p>
+      </div>
+    </div>
+
+    <!-- SAFETY TIPS -->
+    <h2 style="color:white;font-family:'Playfair Display',serif;font-size:1.6rem;margin-bottom:20px">🛡 Safety Tips for Tourists</h2>
+    <div class="safety-tip"><span>📱</span><span>Keep your phone charged at all times and save this app's SOS shortcut on your home screen.</span></div>
+    <div class="safety-tip"><span>📍</span><span>Always share your location and itinerary with someone you trust before exploring new areas.</span></div>
+    <div class="safety-tip"><span>💰</span><span>Carry a small amount of cash and keep your valuables (wallet, passport) secure and out of sight.</span></div>
+    <div class="safety-tip"><span>🕐</span><span>Avoid deserted areas after dark. Stick to well-lit, busy tourist areas in the evenings.</span></div>
+    <div class="safety-tip"><span>🚗</span><span>Only use registered taxis or Ola/Uber. Note the vehicle number before boarding.</span></div>
+    <div class="safety-tip"><span>🏥</span><span>Nearest hospital: Bombay Hospital (0731-2444444), MY Hospital (0731-2433780)</span></div>
+  </div>
+</div>
+
+<!-- ADD CONTACT MODAL -->
+<div class="modal-overlay" id="addContactModal">
+  <div class="modal">
+    <div class="modal-header">
+      <h2 style="font-family:'Playfair Display',serif;font-size:1.3rem">Add Emergency Contact</h2>
+      <button class="modal-close" onclick="closeModal('addContactModal')">✕</button>
+    </div>
+    <div class="form-group">
+      <label>Contact Name</label>
+      <input type="text" id="contactName" placeholder="e.g. Mom, Dad, Hotel">
+    </div>
+    <div class="form-group">
+      <label>Phone Number</label>
+      <input type="tel" id="contactPhone" placeholder="+91 9876543210">
+    </div>
+    <div class="form-group">
+      <label>Relationship</label>
+      <select id="contactRel">
+        <option>Family</option><option>Friend</option><option>Hotel</option><option>Doctor</option><option>Other</option>
+      </select>
+    </div>
+    <button class="btn btn-danger" style="width:100%;justify-content:center" onclick="addContact()">✅ Save Contact</button>
+  </div>
+</div>
+
+<div class="toast-container" id="toastContainer"></div>
+<script src="../js/app.js"></script>
+<script>
+  let userEmergencyContacts = [];
+
+  document.addEventListener('DOMContentLoaded', () => {
+    loadMyContacts();
+  });
+
+  function loadMyContacts() {
+    const user = getUser();
+    const container = document.getElementById('myContacts');
+    if (!container) return;
+
+    userEmergencyContacts = (user && user.emergencyContacts) ? user.emergencyContacts : [
+      { name: 'Family Contact', phone: '+91 98765 43210', relation: 'Family' },
+      { name: 'Hotel Reception', phone: '0731-2500000', relation: 'Hotel' }
+    ];
+
+    if (!userEmergencyContacts.length) {
+      container.innerHTML = '<p style="color:rgba(255,255,255,0.6);text-align:center;font-size:0.9rem;padding:12px;">No emergency contacts added yet.</p>';
+      return;
+    }
+
+    const icons = { Family: '👨', Friend: '🧑', Hotel: '🏨', Doctor: '🩺', Other: '👤' };
+
+    container.innerHTML = userEmergencyContacts.map((c, idx) => `
+      <div style="display:flex;align-items:center;justify-content:space-between;background:rgba(255,255,255,0.07);border-radius:10px;padding:14px 16px;margin-bottom:10px">
+        <div style="display:flex;align-items:center;gap:12px">
+          <div style="width:40px;height:40px;border-radius:50%;background:rgba(231,76,60,0.3);display:flex;align-items:center;justify-content:center;font-size:18px">
+            ${icons[c.relation] || '👤'}
+          </div>
+          <div>
+            <div style="color:white;font-weight:600">${c.name} <span style="font-size:0.7rem;background:rgba(255,255,255,0.15);padding:2px 6px;border-radius:4px;margin-left:4px">${c.relation || ''}</span></div>
+            <div style="color:rgba(255,255,255,0.5);font-size:0.82rem">${c.phone}</div>
+          </div>
+        </div>
+        <div style="display:flex;gap:8px">
+          <button class="btn btn-sm btn-danger" onclick="callContact('${c.name.replace(/'/g, "\\'")}', '${c.phone}')">📞 Call</button>
+          <button class="btn btn-sm" style="background:rgba(231,76,60,0.2);color:#e74c3c" onclick="deleteLocalContact(${idx})">✕</button>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  async function addContact() {
+    const name = document.getElementById('contactName').value.trim();
+    const phone = document.getElementById('contactPhone').value.trim();
+    const relation = document.getElementById('contactRel').value;
+    if (!name || !phone) { showToast('Please fill all fields', 'error'); return; }
+
+    const newContact = { name, phone, relation };
+    const user = getUser();
+    
+    if (user) {
+      if (!user.emergencyContacts) user.emergencyContacts = [];
+      user.emergencyContacts.push(newContact);
+      
+      try {
+        const res = await apiCall('/auth/profile', 'PUT', { emergencyContacts: user.emergencyContacts }, true);
+        if (res && res.success) {
+          setUser(res.user);
+        } else {
+          setUser(user);
+        }
+      } catch (err) {
+        setUser(user);
+      }
+    } else {
+      userEmergencyContacts.push(newContact);
+    }
+    
+    showToast('Emergency contact added!', 'success');
+    closeModal('addContactModal');
+    document.getElementById('contactName').value = '';
+    document.getElementById('contactPhone').value = '';
+    loadMyContacts();
+  }
+
+  async function deleteLocalContact(idx) {
+    const user = getUser();
+    if (user && user.emergencyContacts) {
+      user.emergencyContacts.splice(idx, 1);
+      try {
+        const res = await apiCall('/auth/profile', 'PUT', { emergencyContacts: user.emergencyContacts }, true);
+        if (res && res.success) {
+          setUser(res.user);
+        } else {
+          setUser(user);
+        }
+      } catch (err) {
+        setUser(user);
+      }
+    } else {
+      userEmergencyContacts.splice(idx, 1);
+    }
+    showToast('Contact removed', 'info');
+    loadMyContacts();
+  }
+</script>
+</body>
+</html>

@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Trip Planner – Smart Tourism Indore</title>
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════════
+     FILE: pages/trip-planner.html
+     CHANGES:
+       • Language toggle button in navbar
+       • Trip cards show compact route strip
+       • "View Route" button opens route modal
+       • Create trip modal has "Route Stops" and
+         "Transport Mode" fields
+       • Route modal shows full visual with Maps link
+     ═══════════════════════════════════════════════════ -->
+
+<nav class="navbar">
+  <a href="../index.html" class="nav-logo">
+    <div class="logo-icon">🗺</div>
+    <span>Smart Tourism Indore</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="../index.html" data-i18n="nav.home">Home</a></li>
+    <li><a href="trip-planner.html" class="active" data-i18n="nav.plan">Plan Trip</a></li>
+    <li><a href="explore.html" data-i18n="nav.explore">Explore</a></li>
+    <li><a href="sos.html" data-i18n="nav.safety">Safety</a></li>
+  </ul>
+  <div class="nav-actions">
+    <!-- ★ LANGUAGE TOGGLE ★ -->
+    <button class="lang-toggle-btn" onclick="I18N.toggle()"><span class="lang-flag">🇬🇧</span> English</button>
+    <a href="sos.html" class="btn btn-danger btn-sm">🚨 SOS</a>
+    <a href="dashboard.html" class="btn btn-outline btn-sm" data-i18n="nav.dashboard">Dashboard</a>
+  </div>
+</nav>
+
+<div class="dashboard-layout">
+  <aside class="sidebar">
+    <div class="sidebar-user">
+      <div class="avatar">👤</div>
+      <div class="info"><div class="name">Traveler</div><div class="role">🗺 Tourist</div></div>
+    </div>
+    <ul class="sidebar-nav">
+      <li><a href="dashboard.html">🏠 Dashboard</a></li>
+      <li><a href="trip-planner.html" class="active">🗺 My Trips</a></li>
+      <li><a href="explore.html">🏨 Explore</a></li>
+      <li><a href="translation.html">🌍 Translation</a></li>
+      <li><a href="sos.html">🚨 SOS Emergency</a></li>
+      <li><a href="lost-found.html">🔍 Lost & Found</a></li>
+    </ul>
+  </aside>
+
+  <main class="main-content">
+    <div class="page-header">
+      <div class="flex items-center justify-between">
+        <div>
+          <h1 data-i18n="trip.title">🗺 Trip Planner</h1>
+          <p data-i18n="trip.sub">Create and manage your Indore travel itineraries</p>
+        </div>
+        <button class="btn btn-primary" onclick="openModal('tripModal')" data-i18n="trip.btn.new">+ Create New Trip</button>
+      </div>
+    </div>
+
+    <!-- TABS -->
+    <div class="lf-tabs" style="margin-bottom:28px">
+      <button class="lf-tab active" onclick="showTab('my-trips',this)" data-i18n="trip.tab.mytrips">My Trips</button>
+      <button class="lf-tab" onclick="showTab('route-planner',this)">🗺 Route Planner</button>
+      <button class="lf-tab" onclick="showTab('daily-plan',this)" data-i18n="trip.tab.daily">Daily Itinerary</button>
+      <button class="lf-tab" onclick="showTab('suggestions',this)" data-i18n="trip.tab.suggest">Suggested Plans</button>
+    </div>
+
+    <!-- ══════════ MY TRIPS TAB ══════════ -->
+    <div id="tab-my-trips">
+      <div id="tripsContainer">
+        <div class="text-center" style="padding:48px;color:var(--muted)">
+          <div style="font-size:48px;margin-bottom:12px">📋</div>
+          <p data-i18n="trip.notrips">No trips planned yet. Click "Create New Trip" to start!</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════ ROUTE PLANNER TAB ══════════ -->
+    <div id="tab-route-planner" class="hidden">
+      <h2 style="font-family:'Playfair Display',serif;font-size:1.4rem;margin-bottom:20px">🗺 Interactive Route Planner</h2>
+
+      <!-- QUICK ROUTE BUILDER -->
+      <div style="background:white;border-radius:var(--radius);border:1px solid var(--border);padding:28px;margin-bottom:28px">
+        <h3 style="font-weight:700;margin-bottom:16px">Build Your Route</h3>
+        <div id="stopInputsWrap" style="display:flex;flex-direction:column;gap:10px;margin-bottom:16px">
+          <div class="stop-input-row" style="display:flex;align-items:center;gap:10px">
+            <div style="width:32px;height:32px;border-radius:50%;background:var(--success);color:white;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:14px;font-weight:700">🏠</div>
+            <input type="text" class="stop-input" placeholder="Start — e.g. Indore Railway Station" style="flex:1;padding:10px 14px;border:2px solid var(--border);border-radius:10px;font-family:'DM Sans',sans-serif;outline:none">
+          </div>
+          <div class="stop-input-row" style="display:flex;align-items:center;gap:10px">
+            <div style="width:32px;height:32px;border-radius:50%;background:var(--deep-teal);color:white;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:14px;font-weight:700">📍</div>
+            <input type="text" class="stop-input" placeholder="Stop 1 — e.g. Rajwada Palace" style="flex:1;padding:10px 14px;border:2px solid var(--border);border-radius:10px;font-family:'DM Sans',sans-serif;outline:none">
+          </div>
+          <div class="stop-input-row" style="display:flex;align-items:center;gap:10px">
+            <div style="width:32px;height:32px;border-radius:50%;background:var(--saffron);color:white;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:14px;font-weight:700">🏁</div>
+            <input type="text" class="stop-input" placeholder="End — e.g. Bhopal / Ujjain" style="flex:1;padding:10px 14px;border:2px solid var(--border);border-radius:10px;font-family:'DM Sans',sans-serif;outline:none">
+          </div>
+        </div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap">
+          <button class="btn btn-outline btn-sm" onclick="addStopInput()">+ Add Stop</button>
+          <select id="routeTransport" style="padding:8px 14px;border:2px solid var(--border);border-radius:10px;font-family:'DM Sans',sans-serif;font-size:0.88rem;font-weight:600">
+            <option value="car">🚗 Car/Cab</option>
+            <option value="bus">🚌 Bus</option>
+            <option value="train">🚂 Train</option>
+            <option value="auto">🛺 Auto</option>
+            <option value="walk">🚶 Walking</option>
+          </select>
+          <button class="btn btn-primary" onclick="buildLiveRoute()">🗺 Show Route</button>
+        </div>
+      </div>
+
+      <!-- LIVE ROUTE DISPLAY -->
+      <div id="liveRouteDisplay" class="hidden"></div>
+
+      <!-- POPULAR ROUTES -->
+      <h3 style="font-weight:700;margin-bottom:16px">🌟 Popular MP Routes</h3>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:16px">
+
+        <div class="card" style="cursor:pointer" onclick="loadPopularRoute(['Indore','Ujjain','Omkareshwar'],'bus')">
+          <div class="card-body">
+            <div style="font-weight:700;margin-bottom:8px">🛕 Pilgrimage Circuit</div>
+            <div style="font-size:0.88rem;color:var(--muted);margin-bottom:12px">Sacred temples of Madhya Pradesh</div>
+            <div class="trip-route-strip">
+              <span class="trip-route-stop">🏠 Indore</span><span class="trip-route-arrow">›</span>
+              <span class="trip-route-stop">🛕 Ujjain</span><span class="trip-route-arrow">›</span>
+              <span class="trip-route-stop">🏁 Omkareshwar</span>
+            </div>
+            <div style="display:flex;gap:8px;margin-top:10px;font-size:0.8rem;color:var(--muted)">
+              <span>🚌 Bus</span><span>·</span><span>~4 hours</span><span>·</span><span>₹200-400</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="card" style="cursor:pointer" onclick="loadPopularRoute(['Indore','Bhopal','Sanchi'],'train')">
+          <div class="card-body">
+            <div style="font-weight:700;margin-bottom:8px">🏛 Heritage & Capital</div>
+            <div style="font-size:0.88rem;color:var(--muted);margin-bottom:12px">Explore MP's capital and UNESCO site</div>
+            <div class="trip-route-strip">
+              <span class="trip-route-stop">🏠 Indore</span><span class="trip-route-arrow">›</span>
+              <span class="trip-route-stop">🏛 Bhopal</span><span class="trip-route-arrow">›</span>
+              <span class="trip-route-stop">🏁 Sanchi</span>
+            </div>
+            <div style="display:flex;gap:8px;margin-top:10px;font-size:0.8rem;color:var(--muted)">
+              <span>🚂 Train</span><span>·</span><span>~3.5 hours</span><span>·</span><span>₹150-600</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="card" style="cursor:pointer" onclick="loadPopularRoute(['Indore','Mandu','Maheshwar'],'car')">
+          <div class="card-body">
+            <div style="font-weight:700;margin-bottom:8px">🏰 Forts & Rivers</div>
+            <div style="font-size:0.88rem;color:var(--muted);margin-bottom:12px">Ruins of Mandu + Narmada ghats</div>
+            <div class="trip-route-strip">
+              <span class="trip-route-stop">🏠 Indore</span><span class="trip-route-arrow">›</span>
+              <span class="trip-route-stop">🏰 Mandu</span><span class="trip-route-arrow">›</span>
+              <span class="trip-route-stop">🏁 Maheshwar</span>
+            </div>
+            <div style="display:flex;gap:8px;margin-top:10px;font-size:0.8rem;color:var(--muted)">
+              <span>🚗 Car</span><span>·</span><span>~5 hours</span><span>·</span><span>₹800-1500</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="card" style="cursor:pointer" onclick="loadPopularRoute(['Indore','Patalpani','Mhow'],'car')">
+          <div class="card-body">
+            <div style="font-weight:700;margin-bottom:8px">🌊 Nature Escape</div>
+            <div style="font-size:0.88rem;color:var(--muted);margin-bottom:12px">Waterfalls & scenic Mhow hills</div>
+            <div class="trip-route-strip">
+              <span class="trip-route-stop">🏠 Indore</span><span class="trip-route-arrow">›</span>
+              <span class="trip-route-stop">🌊 Patalpani</span><span class="trip-route-arrow">›</span>
+              <span class="trip-route-stop">🏁 Mhow</span>
+            </div>
+            <div style="display:flex;gap:8px;margin-top:10px;font-size:0.8rem;color:var(--muted)">
+              <span>🚗 Car</span><span>·</span><span>~2 hours</span><span>·</span><span>₹400-800</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ══════════ DAILY PLAN TAB ══════════ -->
+    <div id="tab-daily-plan" class="hidden">
+      <h2 style="font-family:'Playfair Display',serif;font-size:1.4rem;margin-bottom:20px">📅 Sample Day in Indore</h2>
+
+      <!-- COMPACT ROUTE FOR THIS DAY -->
+      <div style="margin-bottom:28px">
+        <div style="font-size:0.82rem;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:10px">📍 Today's Route:</div>
+        <div class="trip-route-strip">
+          <span class="trip-route-stop">🌅 Sarafa</span><span class="trip-route-arrow">›</span>
+          <span class="trip-route-stop">🏰 Rajwada</span><span class="trip-route-arrow">›</span>
+          <span class="trip-route-stop">🕌 Lal Bagh</span><span class="trip-route-arrow">›</span>
+          <span class="trip-route-stop">🍽 Chhappan</span><span class="trip-route-arrow">›</span>
+          <span class="trip-route-stop">🛕 Khajrana</span><span class="trip-route-arrow">›</span>
+          <span class="trip-route-stop">🛍 Mall</span><span class="trip-route-arrow">›</span>
+          <span class="trip-route-stop">🌙 Sarafa</span>
+        </div>
+        <a href="https://www.google.com/maps/dir/Sarafa+Bazaar+Indore/Rajwada+Indore/Lal+Bagh+Palace+Indore/Chhappan+Dukan+Indore/Khajrana+Ganesh+Temple+Indore/Treasure+Island+Mall+Indore" target="_blank" class="btn btn-sm btn-outline mt-2" style="width:fit-content">🗺 Open Full Day Route in Google Maps</a>
+      </div>
+
+      <div class="planner-layout">
+        <div>
+          <div class="timeline">
+            <div class="timeline-item">
+              <div class="timeline-dot">🌅</div>
+              <div class="timeline-content">
+                <div class="time">7:00 AM – 8:30 AM</div>
+                <h4>Breakfast at Sarafa Bazaar</h4>
+                <p>Start with Indore's famous street food – poha jalebi, kachori, and chai.</p>
+                <a href="https://maps.google.com/?q=Sarafa+Bazaar+Indore" target="_blank" style="font-size:0.8rem;color:var(--saffron);font-weight:700;text-decoration:none">📍 Open in Maps →</a>
+              </div>
+            </div>
+            <div class="timeline-item">
+              <div class="timeline-dot">🏰</div>
+              <div class="timeline-content">
+                <div class="time">9:00 AM – 11:00 AM</div>
+                <h4>Rajwada Palace</h4>
+                <p>Explore the iconic 7-story palace in the heart of Indore city.</p>
+                <a href="https://maps.google.com/?q=Rajwada+Palace+Indore" target="_blank" style="font-size:0.8rem;color:var(--saffron);font-weight:700;text-decoration:none">📍 Open in Maps →</a>
+              </div>
+            </div>
+            <div class="timeline-item">
+              <div class="timeline-dot">🕌</div>
+              <div class="timeline-content">
+                <div class="time">11:30 AM – 1:00 PM</div>
+                <h4>Lal Bagh Palace</h4>
+                <p>Visit the magnificent Holkar-era palace with European architecture.</p>
+                <a href="https://maps.google.com/?q=Lal+Bagh+Palace+Indore" target="_blank" style="font-size:0.8rem;color:var(--saffron);font-weight:700;text-decoration:none">📍 Open in Maps →</a>
+              </div>
+            </div>
+            <div class="timeline-item">
+              <div class="timeline-dot">🍽</div>
+              <div class="timeline-content">
+                <div class="time">1:30 PM – 2:30 PM</div>
+                <h4>Lunch at Chhappan Dukan</h4>
+                <p>56 Shops area – a paradise for street food lovers. Try Bhutte ka kees!</p>
+                <a href="https://maps.google.com/?q=Chhappan+Dukan+Indore" target="_blank" style="font-size:0.8rem;color:var(--saffron);font-weight:700;text-decoration:none">📍 Open in Maps →</a>
+              </div>
+            </div>
+            <div class="timeline-item">
+              <div class="timeline-dot">🛕</div>
+              <div class="timeline-content">
+                <div class="time">3:00 PM – 4:30 PM</div>
+                <h4>Khajrana Ganesh Temple</h4>
+                <p>One of the most revered temples in Indore. Seek blessings!</p>
+                <a href="https://maps.google.com/?q=Khajrana+Ganesh+Temple+Indore" target="_blank" style="font-size:0.8rem;color:var(--saffron);font-weight:700;text-decoration:none">📍 Open in Maps →</a>
+              </div>
+            </div>
+            <div class="timeline-item">
+              <div class="timeline-dot">🛍</div>
+              <div class="timeline-content">
+                <div class="time">5:00 PM – 7:00 PM</div>
+                <h4>Shopping at Treasure Island</h4>
+                <p>Shop for local handicrafts, clothes, and souvenirs.</p>
+                <a href="https://maps.google.com/?q=Treasure+Island+Mall+Indore" target="_blank" style="font-size:0.8rem;color:var(--saffron);font-weight:700;text-decoration:none">📍 Open in Maps →</a>
+              </div>
+            </div>
+            <div class="timeline-item">
+              <div class="timeline-dot">🌙</div>
+              <div class="timeline-content">
+                <div class="time">8:00 PM – Late</div>
+                <h4>Sarafa Night Market</h4>
+                <p>Indore's famous late-night street food market. A must-visit!</p>
+                <a href="https://maps.google.com/?q=Sarafa+Bazaar+Indore" target="_blank" style="font-size:0.8rem;color:var(--saffron);font-weight:700;text-decoration:none">📍 Open in Maps →</a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div style="background:white;border-radius:var(--radius);border:1px solid var(--border);padding:28px;position:sticky;top:100px">
+            <h3 style="font-family:'Playfair Display',serif;font-size:1.2rem;margin-bottom:16px">📊 Day Summary</h3>
+            <div style="display:flex;flex-direction:column;gap:12px">
+              <div style="display:flex;justify-content:space-between;padding:12px;background:var(--cream);border-radius:10px"><span>🕐 Total Duration</span><strong>~13 Hours</strong></div>
+              <div style="display:flex;justify-content:space-between;padding:12px;background:var(--cream);border-radius:10px"><span>📍 Places</span><strong>6 Spots</strong></div>
+              <div style="display:flex;justify-content:space-between;padding:12px;background:var(--cream);border-radius:10px"><span>💰 Est. Cost</span><strong>₹500-800</strong></div>
+              <div style="display:flex;justify-content:space-between;padding:12px;background:var(--cream);border-radius:10px"><span>🚗 Transport</span><strong>Auto/Cab</strong></div>
+            </div>
+            <button class="btn btn-primary mt-3" style="width:100%;justify-content:center" onclick="showToast('Itinerary saved!','success')">💾 Save This Itinerary</button>
+            <a href="https://www.google.com/maps/dir/Sarafa+Bazaar+Indore/Rajwada+Indore/Lal+Bagh+Palace+Indore/Khajrana+Temple+Indore/Treasure+Island+Mall+Indore" target="_blank" class="btn btn-outline mt-2" style="width:100%;justify-content:center">🗺 Full Route on Google Maps</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════ SUGGESTIONS TAB ══════════ -->
+    <div id="tab-suggestions" class="hidden">
+      <h2 style="font-family:'Playfair Display',serif;font-size:1.4rem;margin-bottom:20px">✨ Suggested Plans</h2>
+      <div class="cards-grid">
+        <div class="card">
+          <div class="card-img">🌅</div>
+          <div class="card-body">
+            <h3>1-Day Highlights Tour</h3>
+            <div class="trip-route-strip" style="margin:10px 0">
+              <span class="trip-route-stop">🏰 Rajwada</span><span class="trip-route-arrow">›</span>
+              <span class="trip-route-stop">🕌 Lal Bagh</span><span class="trip-route-arrow">›</span>
+              <span class="trip-route-stop">🌙 Sarafa</span>
+            </div>
+            <div class="flex gap-2 mt-2"><span class="tag tag-teal">1 Day</span><span class="tag tag-gold">₹500-800</span></div>
+            <button class="btn btn-primary btn-sm mt-2" onclick="useSuggestedPlan('1-Day Highlights Tour', 'Sarafa Bazaar', 'Rajwada, Lal Bagh, Sarafa', 'car', 800)">Use This Plan</button>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-img">🏛</div>
+          <div class="card-body">
+            <h3>Heritage & Culture Trail</h3>
+            <div class="trip-route-strip" style="margin:10px 0">
+              <span class="trip-route-stop">🏠 Indore</span><span class="trip-route-arrow">›</span>
+              <span class="trip-route-stop">🛕 Ujjain</span><span class="trip-route-arrow">›</span>
+              <span class="trip-route-stop">🏰 Mandu</span>
+            </div>
+            <div class="flex gap-2 mt-2"><span class="tag tag-teal">2 Days</span><span class="tag tag-gold">₹1000-1500</span></div>
+            <button class="btn btn-primary btn-sm mt-2" onclick="useSuggestedPlan('Heritage & Culture Trail', 'Ujjain', 'Indore, Ujjain, Mandu', 'bus', 1500)">Use This Plan</button>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-img">🍽</div>
+          <div class="card-body">
+            <h3>Food Lover's Tour</h3>
+            <div class="trip-route-strip" style="margin:10px 0">
+              <span class="trip-route-stop">🌅 Sarafa</span><span class="trip-route-arrow">›</span>
+              <span class="trip-route-stop">🍱 Chhappan</span><span class="trip-route-arrow">›</span>
+              <span class="trip-route-stop">🌙 Night Mkt</span>
+            </div>
+            <div class="flex gap-2 mt-2"><span class="tag tag-teal">1 Day</span><span class="tag tag-gold">₹300-500</span></div>
+            <button class="btn btn-primary btn-sm mt-2" onclick="useSuggestedPlan('Food Lover\'s Tour', 'Chhappan Dukan', 'Sarafa, Chhappan, Night Mkt', 'walk', 500)">Use This Plan</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<!-- ══════════ CREATE TRIP MODAL ══════════ -->
+<div class="modal-overlay" id="tripModal">
+  <div class="modal" style="max-width:560px">
+    <div class="modal-header">
+      <h2 style="font-family:'Playfair Display',serif;font-size:1.4rem" data-i18n="trip.modal.title">✈️ Create New Trip</h2>
+      <button class="modal-close" onclick="closeModal('tripModal')">✕</button>
+    </div>
+    <form id="tripForm">
+      <div class="form-group">
+        <label data-i18n="trip.field.name">Trip Name *</label>
+        <input type="text" id="tripName" placeholder="e.g. Indore Weekend Getaway" required>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label data-i18n="trip.field.date">Travel Date *</label>
+          <input type="date" id="tripDate" required>
+        </div>
+        <div class="form-group">
+          <label data-i18n="trip.field.people">No. of People</label>
+          <input type="number" id="tripPeople" placeholder="2" min="1" value="1">
+        </div>
+      </div>
+      <div class="form-group">
+        <label data-i18n="trip.field.dest">Main Destination *</label>
+        <input type="text" id="tripDest" placeholder="e.g. Rajwada Palace, Indore" required>
+      </div>
+
+      <!-- ★ NEW FIELD: ROUTE STOPS ★ -->
+      <div class="form-group">
+        <label data-i18n="trip.field.stops">Route Stops <span style="color:var(--muted);font-weight:400">(comma separated)</span></label>
+        <input type="text" id="tripStops" placeholder="e.g. Indore, Ujjain, Omkareshwar, Bhopal">
+        <div style="font-size:0.78rem;color:var(--muted);margin-top:6px">💡 Enter each stop separated by commas. A visual route will be generated automatically.</div>
+      </div>
+
+      <!-- ★ NEW FIELD: TRANSPORT MODE ★ -->
+      <div class="form-group">
+        <label data-i18n="trip.field.transport">Transport Mode</label>
+        <select id="tripTransport">
+          <option value="car">🚗 Car / Cab</option>
+          <option value="bus">🚌 Bus</option>
+          <option value="train">🚂 Train</option>
+          <option value="auto">🛺 Auto-Rickshaw</option>
+          <option value="walk">🚶 Walking</option>
+          <option value="flight">✈️ Flight</option>
+        </select>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label data-i18n="trip.field.budget">Budget (₹)</label>
+          <input type="number" id="tripBudget" placeholder="e.g. 2000">
+        </div>
+        <div class="form-group">
+          <label>Status</label>
+          <select id="tripStatus">
+            <option value="planned">📋 Planned</option>
+            <option value="ongoing">🚀 Ongoing</option>
+            <option value="completed">✅ Completed</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label data-i18n="trip.field.notes">Notes</label>
+        <textarea id="tripNotes" placeholder="Any special requirements, packing list, reminders..."></textarea>
+      </div>
+      <div style="display:flex;gap:12px">
+        <button type="button" class="btn btn-outline" style="flex:1;justify-content:center" onclick="closeModal('tripModal')" data-i18n="btn.cancel">Cancel</button>
+        <button type="submit" class="btn btn-primary" style="flex:1;justify-content:center" data-i18n="btn.save">💾 Save Trip</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- ══════════ ROUTE DETAIL MODAL ══════════ -->
+<div class="modal-overlay" id="routeModal">
+  <div class="modal" style="max-width:640px">
+    <div class="modal-header">
+      <h2 style="font-family:'Playfair Display',serif;font-size:1.3rem">🗺 Trip Route Details</h2>
+      <button class="modal-close" onclick="closeModal('routeModal')">✕</button>
+    </div>
+    <div id="routeModalBody">
+      <!-- Filled by showRouteModal() in route.js -->
+    </div>
+  </div>
+</div>
+
+<div class="toast-container" id="toastContainer"></div>
+
+<!-- Load i18n FIRST, then route.js, then app.js -->
+<script src="../js/i18n.js"></script>
+<script src="../js/route.js"></script>
+<script src="../js/app.js"></script>
+<script>
+// ── TAB SWITCHING ──────────────────────────────────────────
+function showTab(name, btn) {
+  document.querySelectorAll('[id^="tab-"]').forEach(t => t.classList.add('hidden'));
+  document.getElementById('tab-' + name).classList.remove('hidden');
+  document.querySelectorAll('.lf-tab').forEach(t => t.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+// ── LIVE ROUTE BUILDER ─────────────────────────────────────
+function addStopInput() {
+  const wrap = document.getElementById('stopInputsWrap');
+  const rows = wrap.querySelectorAll('.stop-input-row');
+  const count = rows.length;
+  // Update last row to be a middle stop, insert before it
+  const newRow = document.createElement('div');
+  newRow.className = 'stop-input-row';
+  newRow.style.cssText = 'display:flex;align-items:center;gap:10px';
+  newRow.innerHTML = `
+    <div style="width:32px;height:32px;border-radius:50%;background:var(--deep-teal);color:white;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:14px;font-weight:700">📍</div>
+    <input type="text" class="stop-input" placeholder="Stop ${count} — add a place" style="flex:1;padding:10px 14px;border:2px solid var(--border);border-radius:10px;font-family:'DM Sans',sans-serif;outline:none">
+    <button onclick="this.parentElement.remove()" style="background:none;border:none;cursor:pointer;font-size:18px;color:var(--muted)">✕</button>
+  `;
+  // Insert before last row
+  wrap.insertBefore(newRow, rows[rows.length - 1]);
+}
+
+function buildLiveRoute() {
+  const inputs = document.querySelectorAll('#stopInputsWrap .stop-input');
+  const stops = Array.from(inputs).map(i => i.value.trim()).filter(Boolean);
+  if (stops.length < 2) { showToast('Please enter at least 2 stops', 'error'); return; }
+  const transport = document.getElementById('routeTransport').value;
+
+  const stopObjects = stops.map((name, i) => ({
+    id: i, name,
+    isStart: i === 0, isEnd: i === stops.length - 1
+  }));
+
+  const display = document.getElementById('liveRouteDisplay');
+  display.classList.remove('hidden');
+  display.innerHTML = renderRouteStrip(stopObjects, transport);
+  display.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  showToast('Route built! Click "Open in Google Maps" for directions.', 'success');
+}
+
+function loadPopularRoute(stopsArr, transport) {
+  // Fill the inputs and switch to route planner tab
+  const inputs = document.querySelectorAll('#stopInputsWrap .stop-input');
+  stopsArr.forEach((s, i) => { if (inputs[i]) inputs[i].value = s; });
+  document.getElementById('routeTransport').value = transport;
+  buildLiveRoute();
+}
+
+// ── OVERRIDE renderTrips TO INCLUDE ROUTE STRIP ───────────
+// This overrides the default renderTrips from app.js
+window.addEventListener('DOMContentLoaded', () => {
+  // Re-render trips with route info after app.js loads
+  setTimeout(() => {
+    const origRender = window.renderTrips;
+    window.renderTrips = function() {
+      const container = document.getElementById('tripsContainer');
+      if (!container) return;
+      const trips = window.tripItems || [];
+      if (!trips.length) {
+        container.innerHTML = `<div class="text-center" style="padding:48px;color:var(--muted)"><div style="font-size:48px;margin-bottom:12px">📋</div><p>No trips yet. Click "+ Create New Trip" to start!</p></div>`;
+        return;
+      }
+      container.innerHTML = trips.map((t, i) => {
+        const idKey = t._id || String(i);
+        const isIndex = !t._id;
+
+        // Build compact route strip
+        const stopsRaw = t.stops || t.destination || '';
+        const stopList = stopsRaw.includes(',')
+          ? stopsRaw.split(',').map(s => s.trim())
+          : [t.destination];
+        const routeHTML = stopList.length > 1
+          ? `<div class="trip-route-strip">${stopList.map((s,si) =>
+              `<span class="trip-route-stop">${si===0?'🏠':si===stopList.length-1?'🏁':'📍'} ${s}</span>${si<stopList.length-1?'<span class="trip-route-arrow">›</span>':''}`
+            ).join('')}</div>`
+          : `<div class="trip-route-strip"><span class="trip-route-stop">📍 ${t.destination}</span></div>`;
+
+        const transportIcons = {car:'🚗',bus:'🚌',train:'🚂',auto:'🛺',walk:'🚶',flight:'✈️'};
+        const tIcon = transportIcons[t.transport] || '🚗';
+
+        return `
+          <div class="card" style="margin-bottom:16px">
+            <div class="card-body">
+              <div class="flex items-center justify-between" style="margin-bottom:8px">
+                <h3 style="font-size:1.05rem">${t.name}</h3>
+                <div style="display:flex;gap:8px;align-items:center">
+                  <span class="tag ${t.status==='completed'?'tag-teal':t.status==='ongoing'?'tag-gold':'tag-saffron'}">${t.status||'planned'}</span>
+                  <button class="btn btn-sm" style="background:rgba(10,77,92,0.1);color:var(--deep-teal)" onclick="showRouteModal('${idKey}')">🗺 Route</button>
+                  <button class="btn btn-sm" style="background:#fee2e2;color:#dc2626" onclick="deleteTrip('${idKey}',${isIndex})">🗑</button>
+                </div>
+              </div>
+              ${routeHTML}
+              <div class="flex gap-2 mt-2" style="flex-wrap:wrap">
+                <span class="tag tag-teal">📅 ${t.date ? new Date(t.date).toLocaleDateString('en-IN') : t.date}</span>
+                <span class="tag tag-gold">👥 ${t.people||1} people</span>
+                <span class="tag tag-saffron">${tIcon} ${t.transport||'car'}</span>
+                ${t.budget ? `<span class="tag tag-teal">💰 ₹${t.budget}</span>` : ''}
+              </div>
+              ${t.notes ? `<p style="margin-top:8px;color:var(--muted);font-size:0.85rem">${t.notes}</p>` : ''}
+            </div>
+          </div>`;
+      }).join('');
+    };
+
+    // Reload trips with new renderer
+    loadTrips();
+  }, 100);
+});
+
+// ── USE SUGGESTED PLAN FUNCTION ────────────────────────────
+async function useSuggestedPlan(name, destination, stops, transport, budget) {
+  const user = getUser();
+  if (!user) {
+    showToast('Please login first to save trips', 'error');
+    setTimeout(() => { window.location.href = 'login.html'; }, 1200);
+    return;
+  }
+  
+  // Travel date: tomorrow
+  const tomorrow = new Date();
+  tomorrow.setDate(tomorrow.getDate() + 1);
+  const travelDate = tomorrow.toISOString().split('T')[0];
+
+  const payload = {
+    name,
+    date: travelDate,
+    destination,
+    people: 1,
+    budget: parseInt(budget) || 0,
+    notes: `Suggested Plan: ${name}`,
+    stops,
+    transport,
+    status: 'planned'
+  };
+
+  try {
+    const data = await apiCall('/trips', 'POST', payload, true);
+    if (data && data.trip) {
+      if (!window.tripItems) window.tripItems = [];
+      window.tripItems.push(data.trip);
+      showToast(`Added "${name}" to My Trips! 🗺️`, 'success');
+      if (typeof window.renderTrips === 'function') {
+        window.renderTrips();
+      }
+      showTab('my-trips', document.querySelector('.lf-tab'));
+    }
+  } catch (err) {
+    // Local storage fallback
+    const saved = JSON.parse(localStorage.getItem('sts_trips') || '[]');
+    saved.push(payload);
+    localStorage.setItem('sts_trips', JSON.stringify(saved));
+    window.tripItems = saved;
+    showToast(`Saved "${name}" locally (Offline Mode) 🗺️`, 'success');
+    if (typeof window.renderTrips === 'function') {
+      window.renderTrips();
+    }
+    showTab('my-trips', document.querySelector('.lf-tab'));
+  }
+}
+</script>
+</body>
+</html>

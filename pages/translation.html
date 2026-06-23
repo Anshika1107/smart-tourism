@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Translation – Smart Tourism Indore</title>
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+<nav class="navbar">
+  <a href="../index.html" class="nav-logo">
+    <div class="logo-icon">🗺</div>
+    <span>Smart Tourism Indore</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="../index.html" data-i18n="nav.home">Home</a></li>
+    <li><a href="trip-planner.html" data-i18n="nav.plan">Plan Trip</a></li>
+    <li><a href="explore.html" data-i18n="nav.explore">Explore</a></li>
+    <li><a href="sos.html" data-i18n="nav.safety">Safety</a></li>
+  </ul>
+  <div class="nav-actions">
+    <button class="lang-toggle-btn" onclick="I18N.toggle()"><span class="lang-flag">🇬🇧</span> English</button>
+    <a href="sos.html" class="btn btn-danger btn-sm">🚨 SOS</a>
+    <a href="dashboard.html" class="btn btn-outline btn-sm">Dashboard</a>
+  </div>
+</nav>
+
+<div style="background:linear-gradient(135deg,var(--deep-teal),var(--dark));padding:120px 48px 64px;text-align:center">
+  <div class="section-label" data-i18n="trans.label">Language Help</div>
+  <h1 style="font-family:'Playfair Display',serif;font-size:2.6rem;color:white;margin-bottom:12px">🌍 Translation Assistant</h1>
+  <p style="color:rgba(255,255,255,0.75);font-size:1rem;max-width:540px;margin:0 auto">Translate text and learn common phrases. Supports Hindi, English, French, Spanish, German, Japanese, Marathi, Gujarati.</p>
+</div>
+
+<div class="section" style="padding-top:48px">
+  <div style="max-width:760px;margin:0 auto">
+
+    <div style="background:white;border-radius:var(--radius);border:1px solid var(--border);padding:36px;margin-bottom:40px;box-shadow:var(--shadow)">
+      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:24px">
+        <h2 style="font-family:'Playfair Display',serif;font-size:1.5rem">🔤 Text Translator</h2>
+        <div class="trans-lang-tabs" id="sourceTabs">
+          <button class="trans-lang-tab active" onclick="setSourceLang('en',this)">🇬🇧 English</button>
+          <button class="trans-lang-tab" onclick="setSourceLang('hi',this)">🇮🇳 Hindi</button>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Translate From</label>
+        <textarea id="translateInput" placeholder="Type here… e.g. hello, thank you, where is the hospital, I need help" style="min-height:90px;font-size:1rem" oninput="clearResult()"></textarea>
+      </div>
+
+      <div style="display:flex;gap:12px;align-items:flex-end;flex-wrap:wrap">
+        <div class="form-group" style="flex:1;min-width:180px;margin-bottom:0">
+          <label>Translate To</label>
+          <select id="targetLang" style="font-size:0.95rem" onchange="rerenderPhrases()">
+            <option value="hi">🇮🇳 Hindi (हिंदी)</option>
+            <option value="en">🇬🇧 English</option>
+            <option value="fr">🇫🇷 French (Français)</option>
+            <option value="es">🇪🇸 Spanish (Español)</option>
+            <option value="de">🇩🇪 German (Deutsch)</option>
+            <option value="ja">🇯🇵 Japanese (日本語)</option>
+            <option value="mr">🇮🇳 Marathi (मराठी)</option>
+            <option value="gu">🇮🇳 Gujarati (ગુજરાતી)</option>
+          </select>
+        </div>
+        <button class="btn btn-primary" onclick="doTranslate()" style="white-space:nowrap;height:46px;margin-bottom:0">🌍 Translate</button>
+      </div>
+
+      <div id="transResultBox" class="trans-result-box hidden">
+        <div class="trans-result-original" id="transOriginalLabel">Translation Result:</div>
+        <div class="trans-result-text" id="transOutput">—</div>
+        <div class="trans-result-roman" id="transRoman"></div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap">
+          <button class="btn btn-sm btn-outline" onclick="copyTranslation()">📋 Copy</button>
+          <button class="btn btn-sm" style="background:rgba(10,77,92,0.1);color:var(--deep-teal)" onclick="speakTranslation()">🔊 Speak</button>
+          <button class="btn btn-sm btn-outline" onclick="clearResult()">✕ Clear</button>
+        </div>
+      </div>
+
+      <div style="margin-top:20px;padding-top:20px;border-top:1px solid var(--border)">
+        <div style="font-size:0.82rem;color:var(--muted);font-weight:700;margin-bottom:10px;text-transform:uppercase;letter-spacing:0.05em">⚡ Quick Phrases — click to translate:</div>
+        <div style="display:flex;flex-wrap:wrap;gap:8px" id="quickChips"></div>
+      </div>
+    </div>
+
+    <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:8px">
+      <h2 style="font-family:'Playfair Display',serif;font-size:1.6rem">📖 Common Phrases</h2>
+      <div style="display:flex;gap:6px;flex-wrap:wrap">
+        <button class="filter-chip active" onclick="filterPhrases('all',this)">All</button>
+        <button class="filter-chip" onclick="filterPhrases('greet',this)">👋 Greetings</button>
+        <button class="filter-chip" onclick="filterPhrases('food',this)">🍛 Food</button>
+        <button class="filter-chip" onclick="filterPhrases('travel',this)">🚗 Travel</button>
+        <button class="filter-chip" onclick="filterPhrases('emergency',this)">🚨 Emergency</button>
+      </div>
+    </div>
+    <p style="color:var(--muted);margin-bottom:24px;font-size:0.92rem">Tap any card to translate. Tap 🔊 to hear spoken pronunciation.</p>
+    <div class="cards-grid" id="phrasebook" style="grid-template-columns:repeat(auto-fill,minmax(300px,1fr))"></div>
+  </div>
+</div>
+
+<div class="toast-container" id="toastContainer"></div>
+<script src="../js/i18n.js"></script>
+<script src="../js/app.js"></script>
+<script>
+const PHRASE_DB = [
+  {cat:'greet',en:'Hello',hi:'नमस्ते',roman_hi:'Namaste',fr:'Bonjour',es:'Hola',de:'Hallo',ja:'こんにちは',mr:'नमस्कार',gu:'નમસ્તે'},
+  {cat:'greet',en:'Good morning',hi:'शुभ प्रभात',roman_hi:'Shubh Prabhat',fr:'Bonjour',es:'Buenos días',de:'Guten Morgen',ja:'おはよう',mr:'शुभ सकाळ',gu:'શુભ સવાર'},
+  {cat:'greet',en:'Good evening',hi:'शुभ संध्या',roman_hi:'Shubh Sandhya',fr:'Bonsoir',es:'Buenas tardes',de:'Guten Abend',ja:'こんばんは',mr:'शुभ संध्या',gu:'શુભ સાંજ'},
+  {cat:'greet',en:'Thank you',hi:'धन्यवाद',roman_hi:'Dhanyavaad',fr:'Merci',es:'Gracias',de:'Danke',ja:'ありがとう',mr:'धन्यवाद',gu:'આભાર'},
+  {cat:'greet',en:'Goodbye',hi:'अलविदा',roman_hi:'Alvida',fr:'Au revoir',es:'Adiós',de:'Tschüss',ja:'さようなら',mr:'निरोप',gu:'આવજો'},
+  {cat:'greet',en:'How are you?',hi:'आप कैसे हैं?',roman_hi:'Aap kaise hain?',fr:'Comment allez-vous?',es:'¿Cómo está?',de:'Wie geht es Ihnen?',ja:'お元気ですか?',mr:'तुम्ही कसे आहात?',gu:'તમે કેમ છો?'},
+  {cat:'greet',en:'Yes',hi:'हाँ',roman_hi:'Haan',fr:'Oui',es:'Sí',de:'Ja',ja:'はい',mr:'हो',gu:'હા'},
+  {cat:'greet',en:'No',hi:'नहीं',roman_hi:'Nahi',fr:'Non',es:'No',de:'Nein',ja:'いいえ',mr:'नाही',gu:'ના'},
+  {cat:'greet',en:'Please',hi:'कृपया',roman_hi:'Kripaya',fr:'S\'il vous plaît',es:'Por favor',de:'Bitte',ja:'お願いします',mr:'कृपया',gu:'કૃપા કરીને'},
+  {cat:'greet',en:'Sorry',hi:'माफ करें',roman_hi:'Maaf karen',fr:'Désolé',es:'Lo siento',de:'Entschuldigung',ja:'すみません',mr:'माफ करा',gu:'માફ કરો'},
+
+  {cat:'food',en:'Water please',hi:'पानी चाहिए',roman_hi:'Paani chahiye',fr:'De l\'eau s.v.p.',es:'Agua por favor',de:'Wasser bitte',ja:'お水をください',mr:'पाणी द्या',gu:'પાણી આપો'},
+  {cat:'food',en:'Food',hi:'खाना',roman_hi:'Khaana',fr:'Nourriture',es:'Comida',de:'Essen',ja:'食べ物',mr:'जेवण',gu:'ભોજન'},
+  {cat:'food',en:'Restaurant',hi:'रेस्टोरेंट',roman_hi:'Restaurant',fr:'Restaurant',es:'Restaurante',de:'Restaurant',ja:'レストラン',mr:'रेस्टॉरंट',gu:'રેસ્ટોરન્ટ'},
+  {cat:'food',en:'How much?',hi:'कितना?',roman_hi:'Kitnaa?',fr:'Combien?',es:'¿Cuánto?',de:'Wie viel?',ja:'いくら?',mr:'किती?',gu:'કેટલું?'},
+  {cat:'food',en:'Too spicy',hi:'बहुत तीखा',roman_hi:'Bahut teekha',fr:'Trop épicé',es:'Muy picante',de:'Zu scharf',ja:'辛すぎる',mr:'खूप तिखट',gu:'ઘણું તીખું'},
+  {cat:'food',en:'Vegetarian',hi:'शाकाहारी',roman_hi:'Shakahari',fr:'Végétarien',es:'Vegetariano',de:'Vegetarisch',ja:'菜食',mr:'शाकाहारी',gu:'શાકાહારી'},
+  {cat:'food',en:'Bill please',hi:'बिल लाइए',roman_hi:'Bill laiye',fr:'L\'addition s.v.p.',es:'La cuenta',de:'Die Rechnung',ja:'お会計',mr:'बिल आणा',gu:'બિલ આપો'},
+
+  {cat:'travel',en:'Where is?',hi:'कहाँ है?',roman_hi:'Kahaan hai?',fr:'Où est?',es:'¿Dónde está?',de:'Wo ist?',ja:'どこですか?',mr:'कुठे आहे?',gu:'ક્યાં છે?'},
+  {cat:'travel',en:'How far?',hi:'कितनी दूर?',roman_hi:'Kitni door?',fr:'Loin?',es:'¿Qué tan lejos?',de:'Wie weit?',ja:'どのくらい遠い?',mr:'किती दूर?',gu:'કેટલું દૂર?'},
+  {cat:'travel',en:'Taxi',hi:'टैक्सी',roman_hi:'Taxi',fr:'Taxi',es:'Taxi',de:'Taxi',ja:'タクシー',mr:'टॅक्सी',gu:'ટૅક્સી'},
+  {cat:'travel',en:'Bus stop',hi:'बस स्टॉप',roman_hi:'Bus stop',fr:'Arrêt de bus',es:'Parada de autobús',de:'Bushaltestelle',ja:'バス停',mr:'बस थांबा',gu:'બસ સ્ટોપ'},
+  {cat:'travel',en:'Train station',hi:'रेलवे स्टेशन',roman_hi:'Railway Station',fr:'Gare',es:'Estación',de:'Bahnhof',ja:'駅',mr:'रेल्वे स्थानक',gu:'ટ્રેન સ્ટેશન'},
+  {cat:'travel',en:'Hotel',hi:'होटल',roman_hi:'Hotel',fr:'Hôtel',es:'Hotel',de:'Hotel',ja:'ホテル',mr:'हॉटेल',gu:'હોટેલ'},
+  {cat:'travel',en:'I am lost',hi:'मैं खो गया',roman_hi:'Main kho gaya',fr:'Je suis perdu',es:'Estoy perdido',de:'Ich bin verloren',ja:'迷いました',mr:'मी हरवलो',gu:'હું ખોવાઈ ગયો'},
+  {cat:'travel',en:'Left',hi:'बायाँ',roman_hi:'Bayan',fr:'Gauche',es:'Izquierda',de:'Links',ja:'左',mr:'डावे',gu:'ડાબો'},
+  {cat:'travel',en:'Right',hi:'दायाँ',roman_hi:'Dayan',fr:'Droite',es:'Derecha',de:'Rechts',ja:'右',mr:'उजवे',gu:'જમણો'},
+
+  {cat:'emergency',en:'Help!',hi:'मदद करो!',roman_hi:'Madad karo!',fr:'Au secours!',es:'¡Ayuda!',de:'Hilfe!',ja:'助けて!',mr:'मदत करा!',gu:'મદદ કરો!'},
+  {cat:'emergency',en:'Call police',hi:'पुलिस बुलाओ',roman_hi:'Police bulao',fr:'Appelez la police',es:'Llame a la policía',de:'Rufen Sie die Polizei',ja:'警察を呼んで',mr:'पोलिस बोलवा',gu:'પોલીસ બોલાવો'},
+  {cat:'emergency',en:'Hospital',hi:'अस्पताल',roman_hi:'Aspataal',fr:'Hôpital',es:'Hospital',de:'Krankenhaus',ja:'病院',mr:'रुग्णालय',gu:'હોસ્પિટલ'},
+  {cat:'emergency',en:'Doctor',hi:'डॉक्टर',roman_hi:'Doctor',fr:'Médecin',es:'Médico',de:'Arzt',ja:'医者',mr:'डॉक्टर',gu:'ડૉક્ટર'},
+  {cat:'emergency',en:'Fire!',hi:'आग!',roman_hi:'Aag!',fr:'Feu!',es:'¡Fuego!',de:'Feuer!',ja:'火事!',mr:'आग!',gu:'આગ!'},
+  {cat:'emergency',en:'Stolen bag',hi:'बैग चोरी हुआ',roman_hi:'Bag chori hua',fr:'Sac volé',es:'Bolso robado',de:'Tasche gestohlen',ja:'バッグが盗まれた',mr:'बॅग चोरीला गेली',gu:'બૅગ ચોરાઈ ગઈ'},
+];
+
+const QUICK_PHRASES = ['Hello','Thank you','Where is?','How much?','Help!','Water please','Hospital','I am lost'];
+let currentSourceLang = 'en';
+let currentPhraseFilter = 'all';
+
+function setSourceLang(lang, btn) {
+  currentSourceLang = lang;
+  document.querySelectorAll('#sourceTabs .trans-lang-tab').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('translateInput').placeholder = lang === 'hi'
+    ? 'हिंदी में टाइप करें… जैसे नमस्ते, अस्पताल, मदद'
+    : 'Type here… e.g. hello, hospital, help, water';
+  clearResult();
+}
+
+function doTranslate() {
+  const raw = document.getElementById('translateInput').value.trim();
+  const target = document.getElementById('targetLang').value;
+  if (!raw) { showToast('Please enter text to translate', 'error'); return; }
+  if (!target) { showToast('Please select a target language', 'error'); return; }
+
+  const query = raw.toLowerCase();
+  const match = PHRASE_DB.find(p => {
+    const src = (p[currentSourceLang]||'').toLowerCase();
+    return src === query || src.includes(query) || query.includes(src);
+  });
+
+  document.getElementById('transOriginalLabel').textContent = '"' + raw + '" → ' + getLangName(target) + ':';
+
+  if (match && match[target]) {
+    document.getElementById('transOutput').textContent = match[target];
+    document.getElementById('transRoman').textContent = target === 'hi' && match.roman_hi ? 'Pronunciation: ' + match.roman_hi : '';
+  } else {
+    document.getElementById('transOutput').textContent = '[Connect Google Translate API for full translation]';
+    document.getElementById('transRoman').textContent = '💡 Try: hello, hospital, water, food, taxi, left, right';
+    showToast('Phrase not in offline dictionary — try simple words', 'info');
+  }
+  document.getElementById('transResultBox').classList.remove('hidden');
+}
+
+function getLangName(c) { return {hi:'Hindi',en:'English',fr:'French',es:'Spanish',de:'German',ja:'Japanese',mr:'Marathi',gu:'Gujarati'}[c]||c; }
+function clearResult() { document.getElementById('transResultBox').classList.add('hidden'); }
+
+function copyTranslation() {
+  const t = document.getElementById('transOutput').textContent;
+  if (navigator.clipboard) navigator.clipboard.writeText(t);
+  showToast('Copied!', 'success');
+}
+
+function speakTranslation() {
+  const text = document.getElementById('transOutput').textContent;
+  const lang = document.getElementById('targetLang').value;
+  const map = {hi:'hi-IN',en:'en-US',fr:'fr-FR',es:'es-ES',de:'de-DE',ja:'ja-JP',mr:'mr-IN',gu:'gu-IN'};
+  if ('speechSynthesis' in window && !text.includes('[')) {
+    const u = new SpeechSynthesisUtterance(text);
+    u.lang = map[lang] || 'hi-IN'; u.rate = 0.85;
+    speechSynthesis.speak(u);
+    showToast('🔊 Speaking...', 'info');
+  } else { showToast('Speech not supported or no translation found', 'error'); }
+}
+
+function renderQuickChips() {
+  document.getElementById('quickChips').innerHTML = QUICK_PHRASES.map(p =>
+    `<button class="filter-chip" onclick="quickTranslate('${p}')" style="font-size:0.8rem;padding:6px 12px">${p}</button>`
+  ).join('');
+}
+
+function quickTranslate(phrase) {
+  document.getElementById('translateInput').value = phrase;
+  if (!document.getElementById('targetLang').value) document.getElementById('targetLang').value = 'hi';
+  doTranslate();
+}
+
+function rerenderPhrases() { renderPhrasebook(currentPhraseFilter); }
+
+function renderPhrasebook(filter) {
+  const target = document.getElementById('targetLang').value || 'hi';
+  const phrases = filter === 'all' ? PHRASE_DB : PHRASE_DB.filter(p => p.cat === filter);
+  const icons = {greet:'👋',food:'🍛',travel:'🚗',emergency:'🚨'};
+  document.getElementById('phrasebook').innerHTML = phrases.map(p => `
+    <div class="card" style="cursor:pointer" onclick="quickTranslate('${(p.en||'').replace(/'/g,"\\'")}')">
+      <div class="card-body" style="padding:16px 20px">
+        <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px">
+          <div style="flex:1">
+            <div style="font-size:0.7rem;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:0.07em;margin-bottom:4px">${icons[p.cat]||''} ${p.cat}</div>
+            <div style="font-weight:700;margin-bottom:5px;font-size:0.95rem">${p.en}</div>
+            <div style="font-size:1.2rem;color:var(--deep-teal);font-weight:700;margin-bottom:3px">${p.hi}</div>
+            <div style="color:var(--muted);font-size:0.78rem;font-style:italic;margin-bottom:8px">${p.roman_hi}</div>
+            ${p[target] && target !== 'hi' && target !== 'en' ? `<div style="background:rgba(255,107,43,0.08);border-radius:6px;padding:5px 10px;font-size:0.85rem"><span style="color:var(--muted);font-size:0.7rem;font-weight:700">${getLangName(target).toUpperCase()}: </span><span style="color:var(--saffron);font-weight:700">${p[target]}</span></div>` : ''}
+          </div>
+          <button onclick="event.stopPropagation();speakHindi('${(p.hi||'').replace(/'/g,"\\'")}');" style="background:none;border:none;font-size:20px;cursor:pointer;padding:4px;flex-shrink:0" title="Speak">🔊</button>
+        </div>
+      </div>
+    </div>`).join('');
+}
+
+function speakHindi(text) {
+  if ('speechSynthesis' in window) {
+    const u = new SpeechSynthesisUtterance(text);
+    u.lang = 'hi-IN'; u.rate = 0.8;
+    speechSynthesis.speak(u);
+  }
+}
+
+function filterPhrases(cat, btn) {
+  currentPhraseFilter = cat;
+  document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+  btn.classList.add('active');
+  renderPhrasebook(cat);
+}
+
+document.getElementById('translateInput').addEventListener('keydown', e => {
+  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); doTranslate(); }
+});
+
+renderQuickChips();
+renderPhrasebook('all');
+</script>
+</body>
+</html>

@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Panel – Smart Tourism Indore</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <script>
+    (function() {
+      const user = JSON.parse(localStorage.getItem('sts_user') || 'null');
+      const token = localStorage.getItem('sts_token');
+      if (!token || !user || user.role !== 'admin') {
+        const password = prompt('Access Denied: Restricted Area. Please enter the Admin Password to proceed:');
+        if (password === 'admin123') {
+          // Authenticate programmatically to fetch a valid JWT token
+          fetch('http://localhost:5000/api/auth/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email: 'admin@smarttourism.in', password: 'admin123' })
+          })
+          .then(res => res.json())
+          .then(data => {
+            if (data.success) {
+              localStorage.setItem('sts_token', data.token);
+              localStorage.setItem('sts_user', JSON.stringify(data.user));
+              alert('Admin access granted!');
+              window.location.reload();
+            } else {
+              alert('Authentication failed.');
+              window.location.href = 'login.html';
+            }
+          })
+          .catch(err => {
+            // Fallback for local offline simulation
+            localStorage.setItem('sts_token', 'offline-admin-token');
+            localStorage.setItem('sts_user', JSON.stringify({ name: 'Admin User', email: 'admin@smarttourism.in', role: 'admin' }));
+            alert('Offline Admin access granted!');
+            window.location.reload();
+          });
+        } else {
+          alert('Invalid password. Access denied.');
+          window.location.href = 'login.html';
+        }
+      }
+    })();
+  </script>
+</head>
+<body>
+<nav class="navbar">
+  <a href="../index.html" class="nav-logo">
+    <div class="logo-icon">🗺</div>
+    <span>Smart Tourism Indore</span>
+  </a>
+  <div class="nav-actions">
+    <span style="color:var(--danger);font-weight:700;font-size:0.88rem">🛠 Admin Mode</span>
+    <a href="../index.html" class="btn btn-outline btn-sm">← Back to Site</a>
+  </div>
+</nav>
+
+<div class="dashboard-layout">
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-user">
+      <div class="avatar">🛠</div>
+      <div class="info"><div class="name">Admin</div><div class="role">🛠 Administrator</div></div>
+    </div>
+    <div class="sidebar-section-label">Admin Panel</div>
+    <ul class="sidebar-nav">
+      <li><a href="#" onclick="showAdminTab('overview')" class="active" id="tab-btn-overview">📊 Overview</a></li>
+      <li><a href="#" onclick="showAdminTab('users')" id="tab-btn-users">👥 Manage Users</a></li>
+      <li><a href="#" onclick="showAdminTab('listings')" id="tab-btn-listings">🏨 Manage Listings</a></li>
+      <li><a href="#" onclick="showAdminTab('sos-alerts')" id="tab-btn-sos-alerts">🚨 SOS Alerts</a></li>
+      <li><a href="#" onclick="showAdminTab('lost-found-admin')" id="tab-btn-lost-found-admin">🔍 Lost & Found</a></li>
+    </ul>
+    <div class="sidebar-section-label">System</div>
+    <ul class="sidebar-nav">
+      <li><a href="#" onclick="showToast('Analytics dashboard – connect backend','info')">📈 Analytics</a></li>
+      <li><a href="#" onclick="showToast('Settings panel – connect backend','info')">⚙️ Settings</a></li>
+      <li><a href="../index.html">🌐 View Site</a></li>
+    </ul>
+  </aside>
+
+  <!-- MAIN CONTENT -->
+  <main class="main-content">
+
+    <!-- OVERVIEW TAB -->
+    <div id="admin-overview">
+      <div class="page-header">
+        <h1>📊 Admin Dashboard</h1>
+        <p>System overview and key metrics for Smart Tourism Indore</p>
+      </div>
+      <div class="stats-row">
+        <div class="stat-card">
+          <div class="stat-icon" style="background:rgba(255,107,43,0.12)">👥</div>
+          <div><div class="value">1,248</div><div class="label">Total Users</div></div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon" style="background:rgba(10,77,92,0.12)">🏨</div>
+          <div><div class="value">89</div><div class="label">Listings Active</div></div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon" style="background:rgba(231,76,60,0.12)">🚨</div>
+          <div><div class="value">3</div><div class="label">SOS Alerts Today</div></div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon" style="background:rgba(39,174,96,0.12)">✅</div>
+          <div><div class="value">24</div><div class="label">Items Reunited</div></div>
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <div>
+          <h2 style="font-family:'Playfair Display',serif;font-size:1.3rem;margin-bottom:16px">🚨 Recent SOS Alerts</h2>
+          <div class="notif-list">
+            <div class="notif-item unread">
+              <div class="notif-icon" style="background:rgba(231,76,60,0.1)">🚨</div>
+              <div class="notif-text">
+                <div class="title">SOS – Rajwada Area</div>
+                <div class="desc">Tourist ID #1248 triggered SOS at Rajwada Chowk. Police notified.</div>
+              </div>
+              <div class="notif-time">12m ago</div>
+            </div>
+            <div class="notif-item unread">
+              <div class="notif-icon" style="background:rgba(231,76,60,0.1)">🚨</div>
+              <div class="notif-text">
+                <div class="title">SOS – Vijay Nagar</div>
+                <div class="desc">Medical emergency alert. Ambulance dispatched.</div>
+              </div>
+              <div class="notif-time">2h ago</div>
+            </div>
+            <div class="notif-item">
+              <div class="notif-icon" style="background:rgba(39,174,96,0.1)">✅</div>
+              <div class="notif-text">
+                <div class="title">RESOLVED – Sarafa Area</div>
+                <div class="desc">Alert resolved. Tourist safely returned to hotel.</div>
+              </div>
+              <div class="notif-time">5h ago</div>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <h2 style="font-family:'Playfair Display',serif;font-size:1.3rem;margin-bottom:16px">📊 Quick Stats</h2>
+          <div style="background:white;border-radius:var(--radius);border:1px solid var(--border);padding:24px">
+            <div style="display:flex;flex-direction:column;gap:14px">
+              <div style="display:flex;justify-content:space-between;align-items:center;padding-bottom:14px;border-bottom:1px solid var(--border)">
+                <span>🗺 Trips Created Today</span><strong>47</strong>
+              </div>
+              <div style="display:flex;justify-content:space-between;align-items:center;padding-bottom:14px;border-bottom:1px solid var(--border)">
+                <span>🔍 Active Lost Items</span><strong>12</strong>
+              </div>
+              <div style="display:flex;justify-content:space-between;align-items:center;padding-bottom:14px;border-bottom:1px solid var(--border)">
+                <span>🌍 Translations Today</span><strong>234</strong>
+              </div>
+              <div style="display:flex;justify-content:space-between;align-items:center;padding-bottom:14px;border-bottom:1px solid var(--border)">
+                <span>👥 New Signups Today</span><strong>18</strong>
+              </div>
+              <div style="display:flex;justify-content:space-between;align-items:center">
+                <span>⭐ Avg Rating</span><strong>4.7 / 5</strong>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- USERS TAB -->
+    <div id="admin-users" class="hidden">
+      <div class="page-header">
+        <div class="flex items-center justify-between">
+          <div><h1>👥 Manage Users</h1><p>View and manage all registered tourists and admins</p></div>
+          <button class="btn btn-primary" onclick="showToast('Add user – connect backend API','info')">+ Add User</button>
+        </div>
+      </div>
+      <div style="overflow-x:auto">
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th>ID</th><th>Name</th><th>Email</th><th>Role</th><th>Trips</th><th>Status</th><th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>#001</td><td>Rahul Sharma</td><td>rahul@example.com</td>
+              <td><span class="tag tag-teal">Tourist</span></td>
+              <td>3</td>
+              <td><span class="status-badge status-found">Active</span></td>
+              <td><button class="btn btn-sm btn-outline" onclick="showToast('Edit user #001','info')">Edit</button></td>
+            </tr>
+            <tr>
+              <td>#002</td><td>Priya Singh</td><td>priya@example.com</td>
+              <td><span class="tag tag-teal">Tourist</span></td>
+              <td>1</td>
+              <td><span class="status-badge status-found">Active</span></td>
+              <td><button class="btn btn-sm btn-outline" onclick="showToast('Edit user #002','info')">Edit</button></td>
+            </tr>
+            <tr>
+              <td>#003</td><td>David Miller</td><td>david@tourist.com</td>
+              <td><span class="tag tag-teal">Tourist</span></td>
+              <td>5</td>
+              <td><span class="status-badge status-found">Active</span></td>
+              <td><button class="btn btn-sm btn-outline" onclick="showToast('Edit user #003','info')">Edit</button></td>
+            </tr>
+            <tr>
+              <td>#004</td><td>Anita Patel</td><td>anita@example.com</td>
+              <td><span class="tag tag-saffron">Admin</span></td>
+              <td>0</td>
+              <td><span class="status-badge status-found">Active</span></td>
+              <td><button class="btn btn-sm btn-outline" onclick="showToast('Edit user #004','info')">Edit</button></td>
+            </tr>
+            <tr>
+              <td>#005</td><td>Raj Kumar</td><td>raj@example.com</td>
+              <td><span class="tag tag-teal">Tourist</span></td>
+              <td>2</td>
+              <td><span class="status-badge status-closed">Inactive</span></td>
+              <td><button class="btn btn-sm btn-outline" onclick="showToast('Edit user #005','info')">Edit</button></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- LISTINGS TAB -->
+    <div id="admin-listings" class="hidden">
+      <div class="page-header">
+        <div class="flex items-center justify-between">
+          <div><h1>🏨 Manage Listings</h1><p>Add, edit, or remove business listings</p></div>
+          <button class="btn btn-primary" onclick="showToast('Add listing – connect backend API','info')">+ Add Listing</button>
+        </div>
+      </div>
+      <div style="overflow-x:auto">
+        <table class="admin-table">
+          <thead>
+            <tr><th>ID</th><th>Name</th><th>Category</th><th>Rating</th><th>Location</th><th>Status</th><th>Actions</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>#L01</td><td>Sayaji Hotel</td><td><span class="tag tag-teal">Hotel</span></td><td>⭐ 4.7</td><td>Vijay Nagar</td><td><span class="status-badge status-found">Active</span></td><td><div style="display:flex;gap:6px"><button class="btn btn-sm btn-outline" onclick="showToast('Edit listing','info')">Edit</button><button class="btn btn-sm" style="background:#fee2e2;color:#dc2626" onclick="showToast('Listing deactivated','info')">Disable</button></div></td></tr>
+            <tr><td>#L02</td><td>Sarafa Night Market</td><td><span class="tag tag-saffron">Restaurant</span></td><td>⭐ 4.9</td><td>Old Indore</td><td><span class="status-badge status-found">Active</span></td><td><div style="display:flex;gap:6px"><button class="btn btn-sm btn-outline" onclick="showToast('Edit listing','info')">Edit</button><button class="btn btn-sm" style="background:#fee2e2;color:#dc2626" onclick="showToast('Listing deactivated','info')">Disable</button></div></td></tr>
+            <tr><td>#L03</td><td>Rajwada Palace</td><td><span class="tag tag-gold">Attraction</span></td><td>⭐ 4.8</td><td>Old Indore</td><td><span class="status-badge status-found">Active</span></td><td><div style="display:flex;gap:6px"><button class="btn btn-sm btn-outline" onclick="showToast('Edit listing','info')">Edit</button><button class="btn btn-sm" style="background:#fee2e2;color:#dc2626" onclick="showToast('Listing deactivated','info')">Disable</button></div></td></tr>
+            <tr><td>#L04</td><td>Treasure Island Mall</td><td><span class="tag tag-teal">Shopping</span></td><td>⭐ 4.3</td><td>MG Road</td><td><span class="status-badge status-found">Active</span></td><td><div style="display:flex;gap:6px"><button class="btn btn-sm btn-outline" onclick="showToast('Edit listing','info')">Edit</button><button class="btn btn-sm" style="background:#fee2e2;color:#dc2626" onclick="showToast('Listing deactivated','info')">Disable</button></div></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- SOS ALERTS TAB -->
+    <div id="admin-sos-alerts" class="hidden">
+      <div class="page-header">
+        <h1>🚨 SOS Alert Management</h1>
+        <p>Monitor and respond to emergency alerts from tourists</p>
+      </div>
+      <div style="display:flex;gap:16px;margin-bottom:24px;flex-wrap:wrap">
+        <div class="stat-card" style="flex:1;min-width:150px">
+          <div class="stat-icon" style="background:rgba(231,76,60,0.15)">🚨</div>
+          <div><div class="value" style="color:var(--danger)">3</div><div class="label">Active Alerts</div></div>
+        </div>
+        <div class="stat-card" style="flex:1;min-width:150px">
+          <div class="stat-icon" style="background:rgba(244,185,66,0.15)">⏳</div>
+          <div><div class="value">2</div><div class="label">Pending</div></div>
+        </div>
+        <div class="stat-card" style="flex:1;min-width:150px">
+          <div class="stat-icon" style="background:rgba(39,174,96,0.15)">✅</div>
+          <div><div class="value">18</div><div class="label">Resolved Today</div></div>
+        </div>
+      </div>
+      <div style="overflow-x:auto">
+        <table class="admin-table">
+          <thead>
+            <tr><th>Alert ID</th><th>Tourist</th><th>Location</th><th>Time</th><th>Type</th><th>Status</th><th>Action</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>#SOS-047</td><td>Rahul S.</td><td>Rajwada Chowk</td><td>2 min ago</td>
+              <td><span class="tag tag-saffron">Medical</span></td>
+              <td><span class="status-badge status-open" style="animation:sos-pulse 2s infinite">🔴 ACTIVE</span></td>
+              <td><button class="btn btn-sm btn-danger" onclick="showToast('Dispatching response team to Rajwada','info')">Respond</button></td>
+            </tr>
+            <tr>
+              <td>#SOS-046</td><td>Priya S.</td><td>Vijay Nagar</td><td>1h ago</td>
+              <td><span class="tag tag-teal">Safety</span></td>
+              <td><span class="status-badge status-open">🟡 Pending</span></td>
+              <td><button class="btn btn-sm btn-danger" onclick="showToast('Assigning police unit','info')">Respond</button></td>
+            </tr>
+            <tr>
+              <td>#SOS-045</td><td>David M.</td><td>Sarafa Bazaar</td><td>5h ago</td>
+              <td><span class="tag tag-gold">Lost</span></td>
+              <td><span class="status-badge status-found">✅ Resolved</span></td>
+              <td><button class="btn btn-sm btn-outline" onclick="showToast('Alert #SOS-045 details','info')">View</button></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- LOST & FOUND ADMIN TAB -->
+    <div id="admin-lost-found-admin" class="hidden">
+      <div class="page-header">
+        <h1>🔍 Lost & Found Admin</h1>
+        <p>Manage all lost and found item reports</p>
+      </div>
+      <div style="overflow-x:auto">
+        <table class="admin-table">
+          <thead>
+            <tr><th>ID</th><th>Item</th><th>Type</th><th>Location</th><th>Date</th><th>Status</th><th>Actions</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>#LF-001</td><td>Blue Backpack</td><td><span class="tag tag-saffron">Lost</span></td>
+              <td>Rajwada</td><td>2024-11-10</td>
+              <td><span class="status-badge status-open">🔍 Open</span></td>
+              <td><button class="btn btn-sm btn-success" onclick="showToast('Item marked as found!','success')">Mark Found</button></td>
+            </tr>
+            <tr>
+              <td>#LF-002</td><td>Wallet</td><td><span class="tag tag-saffron">Lost</span></td>
+              <td>Sarafa</td><td>2024-11-09</td>
+              <td><span class="status-badge status-found">✅ Found</span></td>
+              <td><button class="btn btn-sm btn-outline" onclick="showToast('Archive item #LF-002','info')">Archive</button></td>
+            </tr>
+            <tr>
+              <td>#LF-003</td><td>iPhone 13</td><td><span class="tag tag-teal">Found</span></td>
+              <td>Lal Bagh</td><td>2024-11-11</td>
+              <td><span class="status-badge status-open">🔍 Open</span></td>
+              <td><button class="btn btn-sm btn-success" onclick="showToast('Item matched!','success')">Match</button></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<div class="toast-container" id="toastContainer"></div>
+<script src="../js/app.js"></script>
+<script>
+  function showAdminTab(name) {
+    document.querySelectorAll('[id^="admin-"]').forEach(t => t.classList.add('hidden'));
+    document.getElementById('admin-' + name).classList.remove('hidden');
+    document.querySelectorAll('[id^="tab-btn-"]').forEach(b => b.classList.remove('active'));
+    document.getElementById('tab-btn-' + name).classList.add('active');
+  }
+</script>
+</body>
+</html>

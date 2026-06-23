@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Explore Indore – Smart Tourism Indore</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
+</head>
+<body>
+<nav class="navbar">
+  <a href="../index.html" class="nav-logo">
+    <div class="logo-icon">🗺</div>
+    <span>Smart Tourism Indore</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="../index.html">Home</a></li>
+    <li><a href="trip-planner.html">Plan Trip</a></li>
+    <li><a href="explore.html" class="active">Explore</a></li>
+    <li><a href="sos.html">Safety</a></li>
+  </ul>
+  <div class="nav-actions">
+    <a href="sos.html" class="btn btn-danger btn-sm">🚨 SOS</a>
+    <a href="dashboard.html" class="btn btn-outline btn-sm">Dashboard</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div style="background:linear-gradient(135deg,var(--deep-teal),var(--dark));padding:120px 48px 64px;text-align:center">
+  <div class="section-label" style="margin-bottom:16px">Discover Indore</div>
+  <h1 style="font-family:'Playfair Display',serif;font-size:2.8rem;color:white;margin-bottom:16px">Explore Local Businesses<br>& Attractions</h1>
+  <p style="color:rgba(255,255,255,0.75);margin-bottom:32px;font-size:1.05rem">Find hotels, restaurants, shops, and attractions in Indore with ratings and reviews</p>
+  <div style="max-width:500px;margin:0 auto" class="search-bar">
+    <span class="search-icon">🔍</span>
+    <input type="text" id="listingSearch" placeholder="Search hotels, restaurants, places..." oninput="searchListings()" style="background:white;border-radius:100px;padding:16px 20px 16px 48px;border:none;font-size:1rem;width:100%">
+  </div>
+</div>
+
+<div class="section" style="padding-top:48px">
+  <!-- FILTERS -->
+  <div class="filter-row">
+    <span style="font-weight:700;color:var(--dark)">Filter by:</span>
+    <button class="filter-chip active" onclick="filterListings('all')">🌟 All</button>
+    <button class="filter-chip" onclick="filterListings('hotel')">🏨 Hotels</button>
+    <button class="filter-chip" onclick="filterListings('restaurant')">🍽 Restaurants</button>
+    <button class="filter-chip" onclick="filterListings('attraction')">🏛 Attractions</button>
+    <button class="filter-chip" onclick="filterListings('shop')">🛍 Shopping</button>
+    <button class="filter-chip" onclick="filterListings('transport')">🚗 Transport</button>
+  </div>
+
+  <!-- LISTINGS GRID -->
+  <div class="cards-grid" id="listingsGrid">
+
+    <!-- HOTELS -->
+    <div class="card listing-card" data-category="hotel" id="card-sayaji">
+      <div class="card-img" style="background:linear-gradient(135deg,#0A4D5C,#1a6b7f);font-size:48px">🏨</div>
+      <div class="card-body">
+        <div class="flex items-center justify-between mb-1">
+          <h3>Sayaji Hotel</h3>
+          <span class="tag tag-teal">Hotel</span>
+        </div>
+        <div class="rating mb-1">⭐ 4.7 <span style="color:var(--muted);font-weight:400">(1,240 reviews)</span></div>
+        <p>5-star luxury hotel with world-class amenities, spa, and multiple dining options.</p>
+        <div style="display:flex;flex-wrap:wrap;gap:6px;margin:10px 0">
+          <span class="tag tag-gold">₹5,000+/night</span>
+          <span class="tag tag-teal">Pool ✓</span>
+          <span class="tag tag-teal">WiFi ✓</span>
+        </div>
+        <div style="font-size:0.82rem;color:var(--muted);margin-bottom:12px">📍 Vijay Nagar, Indore</div>
+        <div style="display:flex;gap:8px">
+          <button class="btn btn-primary btn-sm" onclick="bookHotel('Sayaji Hotel', 5000)">Book Now</button>
+          <button class="btn btn-outline btn-sm" onclick="focusPlace([22.7533, 75.8937], 'Sayaji Hotel')">📍 Map</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="card listing-card" data-category="hotel" id="card-lemontree">
+      <div class="card-img" style="background:linear-gradient(135deg,#2c3e50,#4a6741);font-size:48px">🏩</div>
+      <div class="card-body">
+        <div class="flex items-center justify-between mb-1">
+          <h3>Lemon Tree Hotel</h3>
+          <span class="tag tag-teal">Hotel</span>
+        </div>
+        <div class="rating mb-1">⭐ 4.4 <span style="color:var(--muted);font-weight:400">(890 reviews)</span></div>
+        <p>Modern 4-star hotel with comfortable rooms, gym, and business facilities.</p>
+        <div style="display:flex;flex-wrap:wrap;gap:6px;margin:10px 0">
+          <span class="tag tag-gold">₹2,500+/night</span>
+          <span class="tag tag-teal">Gym ✓</span>
+        </div>
+        <div style="font-size:0.82rem;color:var(--muted);margin-bottom:12px">📍 Scheme No. 54, Indore</div>
+        <div style="display:flex;gap:8px">
+          <button class="btn btn-primary btn-sm" onclick="bookHotel('Lemon Tree Hotel', 2500)">Book Now</button>
+          <button class="btn btn-outline btn-sm" onclick="focusPlace([22.7262, 75.8800], 'Lemon Tree Hotel')">📍 Map</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- RESTAURANTS -->
+    <div class="card listing-card" data-category="restaurant" id="card-sarafa">
+      <div class="card-img" style="background:linear-gradient(135deg,#c0392b,#e74c3c);font-size:48px">🍛</div>
+      <div class="card-body">
+        <div class="flex items-center justify-between mb-1">
+          <h3>Sarafa Night Market</h3>
+          <span class="tag tag-saffron">Street Food</span>
+        </div>
+        <div class="rating mb-1">⭐ 4.9 <span style="color:var(--muted);font-weight:400">(5,600 reviews)</span></div>
+        <p>Famous night food market with 50+ stalls. Indore's most iconic dining experience.</p>
+        <div style="display:flex;flex-wrap:wrap;gap:6px;margin:10px 0">
+          <span class="tag tag-gold">₹50-200/person</span>
+          <span class="tag tag-teal">Night Market</span>
+        </div>
+        <div style="font-size:0.82rem;color:var(--muted);margin-bottom:12px">📍 Near Rajwada, Old Indore</div>
+        <div style="display:flex;gap:8px">
+          <button class="btn btn-primary btn-sm" onclick="showToast('Added to itinerary!','success')">Add to Trip</button>
+          <button class="btn btn-outline btn-sm" onclick="focusPlace([22.7190, 75.8538], 'Sarafa Night Market')">📍 Map</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="card listing-card" data-category="restaurant" id="card-chhappan">
+      <div class="card-img" style="background:linear-gradient(135deg,#f39c12,#e67e22);font-size:48px">🥘</div>
+      <div class="card-body">
+        <div class="flex items-center justify-between mb-1">
+          <h3>Chhappan Dukan</h3>
+          <span class="tag tag-saffron">Street Food</span>
+        </div>
+        <div class="rating mb-1">⭐ 4.8 <span style="color:var(--muted);font-weight:400">(3,200 reviews)</span></div>
+        <p>56-shop food street famous for Bhutte ka kees, poha, and Indori snacks.</p>
+        <div style="display:flex;flex-wrap:wrap;gap:6px;margin:10px 0">
+          <span class="tag tag-gold">₹30-150/person</span>
+          <span class="tag tag-teal">Breakfast ✓</span>
+        </div>
+        <div style="font-size:0.82rem;color:var(--muted);margin-bottom:12px">📍 New Palasia, Indore</div>
+        <div style="display:flex;gap:8px">
+          <button class="btn btn-primary btn-sm" onclick="showToast('Added to itinerary!','success')">Add to Trip</button>
+          <button class="btn btn-outline btn-sm" onclick="focusPlace([22.7244, 75.8732], 'Chhappan Dukan')">📍 Map</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="card listing-card" data-category="restaurant" id="card-shreethali">
+      <div class="card-img" style="background:linear-gradient(135deg,#27ae60,#2ecc71);font-size:48px">🍱</div>
+      <div class="card-body">
+        <div class="flex items-center justify-between mb-1">
+          <h3>Shree Thali Restaurant</h3>
+          <span class="tag tag-saffron">Veg Restaurant</span>
+        </div>
+        <div class="rating mb-1">⭐ 4.5 <span style="color:var(--muted);font-weight:400">(980 reviews)</span></div>
+        <p>Authentic Malwa cuisine with unlimited thali. Great value for money.</p>
+        <div style="display:flex;flex-wrap:wrap;gap:6px;margin:10px 0">
+          <span class="tag tag-gold">₹150-250/person</span>
+        </div>
+        <div style="font-size:0.82rem;color:var(--muted);margin-bottom:12px">📍 Geeta Bhawan, Indore</div>
+        <div style="display:flex;gap:8px">
+          <button class="btn btn-primary btn-sm" onclick="showToast('Added to itinerary!','success')">Add to Trip</button>
+          <button class="btn btn-outline btn-sm" onclick="focusPlace([22.7150, 75.8750], 'Shree Thali Restaurant')">📍 Map</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ATTRACTIONS -->
+    <div class="card listing-card" data-category="attraction" id="card-rajwada">
+      <div class="card-img" style="background:linear-gradient(135deg,#8e44ad,#9b59b6);font-size:48px">🏰</div>
+      <div class="card-body">
+        <div class="flex items-center justify-between mb-1">
+          <h3>Rajwada Palace</h3>
+          <span class="tag tag-gold">Heritage</span>
+        </div>
+        <div class="rating mb-1">⭐ 4.8 <span style="color:var(--muted);font-weight:400">(2,100 reviews)</span></div>
+        <p>The iconic 7-story historical palace, symbol of Indore's Holkar dynasty.</p>
+        <div style="display:flex;flex-wrap:wrap;gap:6px;margin:10px 0">
+          <span class="tag tag-gold">Free Entry</span>
+          <span class="tag tag-teal">9am-6pm</span>
+        </div>
+        <div style="font-size:0.82rem;color:var(--muted);margin-bottom:12px">📍 Rajwada Chowk, Old Indore</div>
+        <div style="display:flex;gap:8px">
+          <button class="btn btn-primary btn-sm" onclick="showToast('Added to itinerary!','success')">Add to Trip</button>
+          <button class="btn btn-outline btn-sm" onclick="focusPlace([22.7196, 75.8577], 'Rajwada Palace')">📍 Map</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="card listing-card" data-category="attraction" id="card-lalbagh">
+      <div class="card-img" style="background:linear-gradient(135deg,#16a085,#1abc9c);font-size:48px">🕌</div>
+      <div class="card-body">
+        <div class="flex items-center justify-between mb-1">
+          <h3>Lal Bagh Palace</h3>
+          <span class="tag tag-gold">Heritage</span>
+        </div>
+        <div class="rating mb-1">⭐ 4.6 <span style="color:var(--muted);font-weight:400">(1,800 reviews)</span></div>
+        <p>Magnificent late 19th century palace with Italian marble and European decor.</p>
+        <div style="display:flex;flex-wrap:wrap;gap:6px;margin:10px 0">
+          <span class="tag tag-saffron">₹50 Entry</span>
+          <span class="tag tag-teal">10am-5pm</span>
+        </div>
+        <div style="font-size:0.82rem;color:var(--muted);margin-bottom:12px">📍 Lal Bagh Road, Indore</div>
+        <div style="display:flex;gap:8px">
+          <button class="btn btn-primary btn-sm" onclick="showToast('Added to itinerary!','success')">Add to Trip</button>
+          <button class="btn btn-outline btn-sm" onclick="focusPlace([22.6976, 75.8427], 'Lal Bagh Palace')">📍 Map</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="card listing-card" data-category="attraction" id="card-khajrana">
+      <div class="card-img" style="background:linear-gradient(135deg,#d35400,#e67e22);font-size:48px">🛕</div>
+      <div class="card-body">
+        <div class="flex items-center justify-between mb-1">
+          <h3>Khajrana Ganesh Temple</h3>
+          <span class="tag tag-gold">Temple</span>
+        </div>
+        <div class="rating mb-1">⭐ 4.9 <span style="color:var(--muted);font-weight:400">(5,200 reviews)</span></div>
+        <p>One of the most famous Ganesh temples in India, believed to grant wishes.</p>
+        <div style="display:flex;flex-wrap:wrap;gap:6px;margin:10px 0">
+          <span class="tag tag-gold">Free Entry</span>
+          <span class="tag tag-teal">5am-10pm</span>
+        </div>
+        <div style="font-size:0.82rem;color:var(--muted);margin-bottom:12px">📍 Khajrana, Indore</div>
+        <div style="display:flex;gap:8px">
+          <button class="btn btn-primary btn-sm" onclick="showToast('Added to itinerary!','success')">Add to Trip</button>
+          <button class="btn btn-outline btn-sm" onclick="focusPlace([22.7303, 75.8973], 'Khajrana Ganesh Temple')">📍 Map</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- SHOPPING -->
+    <div class="card listing-card" data-category="shop" id="card-treasureisland">
+      <div class="card-img" style="background:linear-gradient(135deg,#2980b9,#3498db);font-size:48px">🛍</div>
+      <div class="card-body">
+        <div class="flex items-center justify-between mb-1">
+          <h3>Treasure Island Mall</h3>
+          <span class="tag tag-teal">Shopping Mall</span>
+        </div>
+        <div class="rating mb-1">⭐ 4.3 <span style="color:var(--muted);font-weight:400">(3,400 reviews)</span></div>
+        <p>Central Indore's biggest mall with 200+ stores, food court, and entertainment.</p>
+        <div style="display:flex;flex-wrap:wrap;gap:6px;margin:10px 0">
+          <span class="tag tag-teal">10am-10pm</span>
+          <span class="tag tag-gold">Free Entry</span>
+        </div>
+        <div style="font-size:0.82rem;color:var(--muted);margin-bottom:12px">📍 MG Road, Indore</div>
+        <div style="display:flex;gap:8px">
+          <button class="btn btn-primary btn-sm" onclick="showToast('Added to itinerary!','success')">Add to Trip</button>
+          <button class="btn btn-outline btn-sm" onclick="focusPlace([22.7230, 75.8790], 'Treasure Island Mall')">📍 Map</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- TRANSPORT -->
+    <div class="card listing-card" data-category="transport">
+      <div class="card-img" style="background:linear-gradient(135deg,#7f8c8d,#95a5a6);font-size:48px">🚕</div>
+      <div class="card-body">
+        <div class="flex items-center justify-between mb-1">
+          <h3>Indore City Cab Service</h3>
+          <span class="tag tag-teal">Transport</span>
+        </div>
+        <div class="rating mb-1">⭐ 4.2 <span style="color:var(--muted);font-weight:400">(780 reviews)</span></div>
+        <p>Reliable cab service covering all tourist spots in Indore. AC & Non-AC options.</p>
+        <div style="display:flex;flex-wrap:wrap;gap:6px;margin:10px 0">
+          <span class="tag tag-gold">₹12/km</span>
+          <span class="tag tag-teal">24/7</span>
+        </div>
+        <div style="font-size:0.82rem;color:var(--muted);margin-bottom:12px">📞 0731-2500000</div>
+        <div style="display:flex;gap:8px">
+          <button class="btn btn-primary btn-sm" onclick="showToast('Cab booking coming soon!','info')">Book Cab</button>
+          <button class="btn btn-outline btn-sm" onclick="callContact('City Cab Service', '0731-2500000')">📞 Call</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- MAP -->
+  <div style="margin-top:48px">
+    <h2 style="font-family:'Playfair Display',serif;font-size:1.6rem;margin-bottom:20px">📍 Explore on Map</h2>
+    <div id="map" style="height: 450px; border-radius: var(--radius); border: 1px solid var(--border); box-shadow: var(--shadow); position: relative; z-index: 1;"></div>
+  </div>
+</div>
+
+<div class="toast-container" id="toastContainer"></div>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="../js/app.js"></script>
+<script>
+  let map;
+  let markers = {};
+
+  const PLACES_DATA = [
+    { name: "Sayaji Hotel", lat: 22.7533, lng: 75.8937, cat: "hotel", emoji: "🏨", desc: "Vijay Nagar, Indore" },
+    { name: "Lemon Tree Hotel", lat: 22.7262, lng: 75.8800, cat: "hotel", emoji: "🏩", desc: "Scheme No. 54, Indore" },
+    { name: "Sarafa Night Market", lat: 22.7190, lng: 75.8538, cat: "restaurant", emoji: "🍛", desc: "Near Rajwada, Old Indore" },
+    { name: "Chhappan Dukan", lat: 22.7244, lng: 75.8732, cat: "restaurant", emoji: "🥘", desc: "New Palasia, Indore" },
+    { name: "Shree Thali Restaurant", lat: 22.7150, lng: 75.8750, cat: "restaurant", emoji: "🍱", desc: "Geeta Bhawan, Indore" },
+    { name: "Rajwada Palace", lat: 22.7196, lng: 75.8577, cat: "attraction", emoji: "🏰", desc: "Rajwada Chowk, Old Indore" },
+    { name: "Lal Bagh Palace", lat: 22.6976, lng: 75.8427, cat: "attraction", emoji: "🕌", desc: "Lal Bagh Road, Indore" },
+    { name: "Khajrana Ganesh Temple", lat: 22.7303, lng: 75.8973, cat: "attraction", emoji: "🛕", desc: "Khajrana, Indore" },
+    { name: "Treasure Island Mall", lat: 22.7230, lng: 75.8790, cat: "shop", emoji: "🛍", desc: "MG Road, Indore" }
+  ];
+
+  document.addEventListener("DOMContentLoaded", () => {
+    // Initialize map focused on Indore
+    map = L.map('map').setView([22.7196, 75.8577], 13);
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    }).addTo(map);
+
+    // Populate markers
+    PLACES_DATA.forEach(p => {
+      const marker = L.marker([p.lat, p.lng]).addTo(map);
+      marker.bindPopup(`<strong>${p.emoji} ${p.name}</strong><br>${p.desc}`);
+      markers[p.name] = marker;
+    });
+  });
+
+  function focusPlace(coords, name) {
+    if (map) {
+      map.setView(coords, 16);
+      if (markers[name]) {
+        markers[name].openPopup();
+      }
+      document.getElementById('map').scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  }
+
+  function bookHotel(name, price) {
+    Swal.fire({
+      title: `Book Room at ${name}`,
+      html: `
+        <div style="text-align:left; font-family:'DM Sans',sans-serif">
+          <p style="margin-bottom:8px"><strong>Base Price:</strong> ₹${price}/night</p>
+          <div style="margin-bottom:12px">
+            <label style="display:block; font-size:0.85rem; font-weight:600; margin-bottom:4px">Check-in Date</label>
+            <input type="date" id="swalCheckIn" class="swal2-input" style="margin:0; width:100%">
+          </div>
+          <div style="margin-bottom:12px">
+            <label style="display:block; font-size:0.85rem; font-weight:600; margin-bottom:4px">Number of Nights</label>
+            <input type="number" id="swalNights" value="1" min="1" class="swal2-input" style="margin:0; width:100%">
+          </div>
+          <div>
+            <label style="display:block; font-size:0.85rem; font-weight:600; margin-bottom:4px">Room Type</label>
+            <select id="swalRoomType" class="swal2-input" style="margin:0; width:100%">
+              <option value="deluxe">Deluxe Room</option>
+              <option value="suite">Luxury Suite</option>
+            </select>
+          </div>
+        </div>
+      `,
+      focusConfirm: false,
+      showCancelButton: true,
+      confirmButtonText: 'Confirm Booking',
+      confirmButtonColor: '#0A4D5C',
+      cancelButtonColor: '#d33',
+      preConfirm: () => {
+        const checkin = document.getElementById('swalCheckIn').value;
+        const nights = document.getElementById('swalNights').value;
+        const type = document.getElementById('swalRoomType').value;
+        if (!checkin) {
+          Swal.showValidationMessage('Please select a check-in date');
+        }
+        return { checkin, nights, type };
+      }
+    }).then((result) => {
+      if (result.isConfirmed) {
+        const total = price * result.value.nights;
+        Swal.fire({
+          icon: 'success',
+          title: 'Booking Confirmed!',
+          text: `Successfully booked room at ${name} for ${result.value.nights} night(s). Total Price: ₹${total}. Check-in: ${result.value.checkin}.`,
+          confirmButtonColor: '#0A4D5C'
+        });
+      }
+    });
+  }
+</script>
+</body>
+</html>

@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Account Settings – Smart Tourism Indore</title>
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+<nav class="navbar">
+  <a href="../index.html" class="nav-logo">
+    <div class="logo-icon">🗺</div>
+    <span data-i18n="nav.logo">Smart Tourism Indore</span>
+  </a>
+  <div class="nav-actions">
+    <button class="lang-toggle-btn" onclick="I18N.toggle()"><span class="lang-flag">🇬🇧</span> English</button>
+    <a href="sos.html" class="btn btn-danger btn-sm" data-i18n="cta.btn.sos">🚨 SOS Emergency</a>
+    <button class="btn btn-outline btn-sm" onclick="logout()" data-i18n="nav.logout">Logout</button>
+  </div>
+</nav>
+
+<div class="dashboard-layout">
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-user">
+      <div class="avatar">👤</div>
+      <div class="info">
+        <div class="name">Traveler</div>
+        <div class="role" data-i18n="nav.explore">🗺 Tourist</div>
+      </div>
+    </div>
+    <div class="sidebar-section-label" data-i18n="sidebar.main">Main</div>
+    <ul class="sidebar-nav">
+      <li><a href="dashboard.html">🏠 <span data-i18n="nav.dashboard">Dashboard</span></a></li>
+      <li><a href="trip-planner.html">🗺 <span data-i18n="nav.plan">My Trips</span></a></li>
+      <li><a href="explore.html">🏨 <span data-i18n="nav.explore">Explore</span></a></li>
+      <li><a href="translation.html">🌍 <span data-i18n="features.trans.title">Translation</span></a></li>
+      <li><a href="feedback.html">⭐ <span>Feedback</span></a></li>
+    </ul>
+    <div class="sidebar-section-label" data-i18n="sidebar.safety">Safety</div>
+    <ul class="sidebar-nav">
+      <li><a href="sos.html">🚨 <span data-i18n="nav.safety">SOS Emergency</span></a></li>
+      <li><a href="lost-found.html">🔍 <span data-i18n="nav.lostfound">Lost & Found</span></a></li>
+    </ul>
+    <div class="sidebar-section-label" data-i18n="sidebar.account">Account</div>
+    <ul class="sidebar-nav">
+      <li><a href="profile.html">👤 <span data-i18n="sidebar.profile">Profile</span></a></li>
+      <li><a href="settings.html" class="active">⚙️ <span data-i18n="sidebar.settings">Settings</span></a></li>
+      <li><a href="#" onclick="logout()" style="color:rgba(231,76,60,0.8)">🚪 <span data-i18n="sidebar.logout">Logout</span></a></li>
+    </ul>
+  </aside>
+
+  <!-- MAIN CONTENT -->
+  <main class="main-content">
+    <div class="page-header">
+      <h1 data-i18n="settings.title">⚙️ Account Settings</h1>
+      <p data-i18n="settings.sub">Configure security credentials and application preferences.</p>
+    </div>
+
+    <div class="grid-2">
+      <!-- Change Password -->
+      <div class="card" style="padding: 24px;">
+        <h2 style="font-family:'Playfair Display',serif;font-size:1.3rem;margin-bottom:20px" data-i18n="settings.pass.title">🔐 Change Password</h2>
+        <form id="passwordForm">
+          <div class="form-group">
+            <label data-i18n="settings.pass.current">Current Password</label>
+            <input type="password" id="currPassword" required minlength="6">
+          </div>
+          <div class="form-group">
+            <label data-i18n="settings.pass.new">New Password</label>
+            <input type="password" id="newPassword" required minlength="6">
+          </div>
+          <div class="form-group">
+            <label data-i18n="settings.pass.confirm">Confirm New Password</label>
+            <input type="password" id="confPassword" required minlength="6">
+          </div>
+          <button type="submit" class="btn btn-primary" style="width:100%; justify-content:center" data-i18n="settings.pass.btn">🔒 Update Password</button>
+        </form>
+      </div>
+
+      <!-- App Preferences -->
+      <div class="card" style="padding: 24px;">
+        <h2 style="font-family:'Playfair Display',serif;font-size:1.3rem;margin-bottom:20px" data-i18n="settings.pref.title">⚙️ Preferences</h2>
+        <div class="form-group">
+          <label data-i18n="settings.pref.lang">Language</label>
+          <button class="btn btn-outline" style="width:100%; justify-content:center; padding:12px;" onclick="I18N.toggle()">
+            <span class="lang-flag">🌍</span> <span data-i18n="settings.pref.lang.btn">Change Language Preference</span>
+          </button>
+        </div>
+        
+        <div style="border-top:1px solid var(--border); padding-top:20px; margin-top:20px">
+          <h3 style="font-size:1rem; font-weight:700; margin-bottom:12px" data-i18n="settings.pref.notif.title">Notifications</h3>
+          <div class="form-group" style="display:flex; align-items:center; gap:10px;">
+            <input type="checkbox" id="emailNotifs" checked style="width:auto; margin:0;">
+            <label for="emailNotifs" style="margin:0; font-weight:500;" data-i18n="settings.pref.notif.email">Receive safety alerts via email</label>
+          </div>
+          <div class="form-group" style="display:flex; align-items:center; gap:10px;">
+            <input type="checkbox" id="smsNotifs" checked style="width:auto; margin:0;">
+            <label for="smsNotifs" style="margin:0; font-weight:500;" data-i18n="settings.pref.notif.sms">Receive SOS confirmation messages</label>
+          </div>
+        </div>
+
+        <div style="border-top:1px solid var(--border); padding-top:20px; margin-top:20px">
+          <h3 style="font-size:1rem; font-weight:700; margin-bottom:12px; color:var(--danger)" data-i18n="settings.danger.title">Danger Zone</h3>
+          <p style="color:var(--muted); font-size:0.85rem; margin-bottom:12px;" data-i18n="settings.danger.desc">Deactivating your account will block accesses until reactivated by an admin.</p>
+          <button class="btn" style="background:#fee2e2; color:#dc2626; border:1px solid #fecaca; width:100%; justify-content:center" onclick="deactivateSelf()" data-i18n="settings.danger.btn">Deactivate My Account</button>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<div class="toast-container" id="toastContainer"></div>
+<script src="../js/i18n.js"></script>
+<script src="../js/app.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const user = getUser();
+    if (!user) {
+      showToast('Please login first', 'error');
+      setTimeout(() => { window.location.href = 'login.html'; }, 1000);
+      return;
+    }
+
+    document.getElementById('passwordForm').addEventListener('submit', changePassword);
+  });
+
+  async function changePassword(e) {
+    e.preventDefault();
+    const currentPassword = document.getElementById('currPassword').value;
+    const newPassword = document.getElementById('newPassword').value;
+    const confirmPassword = document.getElementById('confPassword').value;
+
+    if (newPassword !== confirmPassword) {
+      showToast('New passwords do not match!', 'error');
+      return;
+    }
+
+    if (newPassword.length < 6) {
+      showToast('Password must be at least 6 characters', 'error');
+      return;
+    }
+
+    const btn = e.target.querySelector('[type=submit]');
+    if (btn) { btn.disabled = true; btn.textContent = 'Updating...'; }
+
+    try {
+      const res = await apiCall('/auth/change-password', 'PUT', { currentPassword, newPassword }, true);
+      if (res && res.success) {
+        showToast('Password changed successfully!', 'success');
+        e.target.reset();
+      } else {
+        showToast('Offline Mode: Cannot change password offline', 'error');
+      }
+    } catch (err) {
+      showToast(err.message || 'Failed to change password', 'error');
+    } finally {
+      if (btn) { btn.disabled = false; btn.textContent = '🔒 Update Password'; }
+    }
+  }
+
+  async function deactivateSelf() {
+    if (confirm('Are you sure you want to deactivate your account? You will be logged out immediately.')) {
+      const user = getUser();
+      if (!user) return;
+      try {
+        const res = await apiCall(`/admin/users/${user.id}`, 'DELETE', null, true);
+        showToast('Account deactivated. Logging out...', 'info');
+        setTimeout(() => { logout(); }, 1500);
+      } catch (err) {
+        showToast(err.message || 'Failed to deactivate account', 'error');
+      }
+    }
+  }
+</script>
+</body>
+</html>

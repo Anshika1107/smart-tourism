@@ -1,0 +1,747 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>User Profile – Smart Tourism Indore</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    .contact-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 16px;
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      margin-bottom: 8px;
+      transition: var(--transition);
+    }
+    .contact-item:hover {
+      border-color: var(--saffron);
+      box-shadow: var(--shadow);
+    }
+    .avatar-option {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: #f4f4f4;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      cursor: pointer;
+      border: 2px solid transparent;
+      transition: var(--transition);
+    }
+    .avatar-option:hover {
+      transform: scale(1.1);
+      background: rgba(255,107,43,0.1);
+    }
+    .avatar-option.selected {
+      border-color: var(--saffron);
+      background: rgba(255,107,43,0.15);
+      box-shadow: 0 0 10px rgba(255,107,43,0.2);
+    }
+    .profile-card-header {
+      text-align: center;
+      padding: 20px 0;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 24px;
+    }
+    .profile-card-header .big-avatar {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--saffron), var(--gold));
+      font-size: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 12px;
+      box-shadow: var(--shadow-lg);
+    }
+    .stat-badge-row {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+    .stat-badge-card {
+      background: var(--cream);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 14px;
+      text-align: center;
+    }
+    .stat-badge-card .num {
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: var(--deep-teal);
+    }
+    .stat-badge-card .lbl {
+      font-size: 0.75rem;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+    .badge-container {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      margin-top: 16px;
+    }
+    @media(min-width: 480px) {
+      .badge-container {
+        grid-template-columns: repeat(4, 1fr);
+      }
+    }
+    .badge-item {
+      background: var(--cream);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 16px 8px;
+      text-align: center;
+      transition: var(--transition);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+    }
+    .badge-item.locked {
+      filter: grayscale(100%);
+      opacity: 0.5;
+    }
+    .badge-item:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow);
+    }
+    .badge-icon {
+      font-size: 32px;
+    }
+    .badge-name {
+      font-weight: 700;
+      font-size: 0.78rem;
+      color: var(--dark);
+    }
+    .badge-desc {
+      font-size: 0.65rem;
+      color: var(--muted);
+      line-height: 1.2;
+    }
+    .activity-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px;
+      border-bottom: 1px solid var(--border);
+    }
+    .activity-item:last-child {
+      border-bottom: none;
+    }
+  </style>
+</head>
+<body>
+<nav class="navbar">
+  <a href="../index.html" class="nav-logo">
+    <div class="logo-icon">🗺</div>
+    <span data-i18n="nav.logo">Smart Tourism Indore</span>
+  </a>
+  <div class="nav-actions">
+    <button class="lang-toggle-btn" onclick="I18N.toggle()"><span class="lang-flag">🇬🇧</span> English</button>
+    <a href="sos.html" class="btn btn-danger btn-sm" data-i18n="cta.btn.sos">🚨 SOS Emergency</a>
+    <button class="btn btn-outline btn-sm" onclick="logout()" data-i18n="nav.logout">Logout</button>
+  </div>
+</nav>
+
+<div class="dashboard-layout">
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-user">
+      <div class="avatar">👤</div>
+      <div class="info">
+        <div class="name">Traveler</div>
+        <div class="role" data-i18n="nav.explore">🗺 Tourist</div>
+      </div>
+    </div>
+    <div class="sidebar-section-label" data-i18n="sidebar.main">Main</div>
+    <ul class="sidebar-nav">
+      <li><a href="dashboard.html">🏠 <span data-i18n="nav.dashboard">Dashboard</span></a></li>
+      <li><a href="trip-planner.html">🗺 <span data-i18n="nav.plan">My Trips</span></a></li>
+      <li><a href="explore.html">🏨 <span data-i18n="nav.explore">Explore</span></a></li>
+      <li><a href="translation.html">🌍 <span data-i18n="features.trans.title">Translation</span></a></li>
+      <li><a href="feedback.html">⭐ <span>Feedback</span></a></li>
+    </ul>
+    <div class="sidebar-section-label" data-i18n="sidebar.safety">Safety</div>
+    <ul class="sidebar-nav">
+      <li><a href="sos.html">🚨 <span data-i18n="nav.safety">SOS Emergency</span></a></li>
+      <li><a href="lost-found.html">🔍 <span data-i18n="nav.lostfound">Lost & Found</span></a></li>
+    </ul>
+    <div class="sidebar-section-label" data-i18n="sidebar.account">Account</div>
+    <ul class="sidebar-nav">
+      <li><a href="profile.html" class="active">👤 <span data-i18n="sidebar.profile">Profile</span></a></li>
+      <li><a href="settings.html">⚙️ <span data-i18n="sidebar.settings">Settings</span></a></li>
+      <li><a href="#" onclick="logout()" style="color:rgba(231,76,60,0.8)">🚪 <span data-i18n="sidebar.logout">Logout</span></a></li>
+    </ul>
+  </aside>
+
+  <!-- MAIN CONTENT -->
+  <main class="main-content">
+    <div class="page-header">
+      <h1>👤 My Profile</h1>
+      <p>Manage your account, travel statistics, badges, wishlist, and safety contacts.</p>
+    </div>
+
+    <div class="grid-2">
+      <!-- Left Column: Account details & Contacts -->
+      <div style="display:flex; flex-direction:column; gap:24px">
+        <!-- Account Card -->
+        <div class="card" style="padding: 24px;">
+          <div class="profile-card-header">
+            <div class="big-avatar" id="profileBigAvatar">👤</div>
+            <h2 id="profileDisplayName" style="font-family:'Playfair Display',serif;font-size:1.4rem;margin-bottom:4px">Traveler</h2>
+            <div id="profRoleBadge" style="margin-top: 4px;"><span class="tag tag-teal">Tourist</span></div>
+          </div>
+
+          <h3 style="font-size:1rem;font-weight:700;margin-bottom:12px">Choose Avatar Emojis</h3>
+          <div style="display:flex; gap:12px; margin-bottom:24px; flex-wrap:wrap;">
+            <div class="avatar-option selected" data-avatar="👤" onclick="selectAvatar('👤', this)">👤</div>
+            <div class="avatar-option" data-avatar="🧭" onclick="selectAvatar('🧭', this)">🧭</div>
+            <div class="avatar-option" data-avatar="🎒" onclick="selectAvatar('🎒', this)">🎒</div>
+            <div class="avatar-option" data-avatar="📸" onclick="selectAvatar('📸', this)">📸</div>
+            <div class="avatar-option" data-avatar="🗺️" onclick="selectAvatar('🗺️', this)">🗺️</div>
+            <div class="avatar-option" data-avatar="🏕️" onclick="selectAvatar('🏕️', this)">🏕️</div>
+            <div class="avatar-option" data-avatar="✈️" onclick="selectAvatar('✈️', this)">✈️</div>
+          </div>
+
+          <form id="profileForm">
+            <div class="form-group">
+              <label>Name</label>
+              <input type="text" id="profName" required>
+            </div>
+            <div class="form-group">
+              <label>Email Address</label>
+              <input type="email" id="profEmail" required>
+            </div>
+            <div class="form-group">
+              <label>Phone</label>
+              <input type="text" id="profPhone" placeholder="+91 9999999999">
+            </div>
+            <div class="form-group">
+              <label>Location</label>
+              <input type="text" id="profLocation" placeholder="e.g. Indore, Madhya Pradesh">
+            </div>
+            <button type="submit" class="btn btn-primary" style="width:100%; justify-content:center">💾 Save Changes</button>
+          </form>
+        </div>
+
+        <!-- Emergency Contacts Card -->
+        <div class="card" style="padding: 24px;">
+          <h2 style="font-family:'Playfair Display',serif;font-size:1.2rem;margin-bottom:12px;color:var(--dark)">🚨 Emergency Contacts</h2>
+          <p style="color:var(--muted);font-size:0.85rem;margin-bottom:16px">Add reliable contacts. These will be alerted in case you trigger an SOS.</p>
+          
+          <div id="contactsList" style="margin-bottom:20px">
+            <!-- Loaded dynamically -->
+          </div>
+
+          <h3 style="font-size:0.95rem;font-weight:700;margin-bottom:12px;border-top:1px solid var(--border);padding-top:16px;color:var(--dark)">Add New Contact</h3>
+          <div class="form-group">
+            <label>Contact Name</label>
+            <input type="text" id="newContactName" placeholder="e.g. Priya Sharma">
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Relationship</label>
+              <input type="text" id="newContactRelation" placeholder="e.g. Sister, Friend">
+            </div>
+            <div class="form-group">
+              <label>Phone Number</label>
+              <input type="text" id="newContactPhone" placeholder="e.g. +91 9876543210">
+            </div>
+          </div>
+          <button type="button" class="btn btn-outline" style="width:100%; justify-content:center" onclick="addContact()">➕ Add Contact</button>
+        </div>
+
+        <!-- Change Password Card -->
+        <div class="card" style="padding: 24px;">
+          <h2 style="font-family:'Playfair Display',serif;font-size:1.2rem;margin-bottom:12px;color:var(--dark)">🔐 Change Password</h2>
+          <p style="color:var(--muted);font-size:0.85rem;margin-bottom:16px">Update your security password regularly to secure your account.</p>
+          <form id="passwordForm">
+            <div class="form-group">
+              <label>Current Password</label>
+              <input type="password" id="currPassword" required minlength="8" placeholder="Current password">
+            </div>
+            <div class="form-group">
+              <label>New Password</label>
+              <input type="password" id="newPassword" required minlength="8" placeholder="Minimum 8 characters">
+            </div>
+            <div class="form-group">
+              <label>Confirm New Password</label>
+              <input type="password" id="confPassword" required minlength="8" placeholder="Repeat new password">
+            </div>
+            <button type="submit" class="btn btn-primary" style="width:100%; justify-content:center">🔒 Update Password</button>
+          </form>
+        </div>
+      </div>
+
+      <!-- Right Column: Stats, Badges, Wishlist & Recent Activity -->
+      <div style="display:flex; flex-direction:column; gap:24px">
+        <!-- Stats Card -->
+        <div class="card" style="padding: 24px;">
+          <h2 style="font-family:'Playfair Display',serif;font-size:1.2rem;margin-bottom:16px;color:var(--dark)">📊 Travel Statistics</h2>
+          <div class="stat-badge-row">
+            <div class="stat-badge-card">
+              <div class="num" id="statVisitedCount">0</div>
+              <div class="lbl">Places Visited</div>
+            </div>
+            <div class="stat-badge-card">
+              <div class="num" id="statTripsCount">0</div>
+              <div class="lbl">Trips Planned</div>
+            </div>
+            <div class="stat-badge-card">
+              <div class="num" id="statSavedCount">0</div>
+              <div class="lbl">Saved Attractions</div>
+            </div>
+            <div class="stat-badge-card">
+              <div class="num" id="statFavCategory">None</div>
+              <div class="lbl">Fav Category</div>
+            </div>
+          </div>
+          <div style="font-size:0.85rem; color:var(--muted)">
+            <div><strong>Member since:</strong> <span id="statJoinDate">-</span></div>
+            <div style="margin-top:4px"><strong>Account Status:</strong> <span style="color:var(--success); font-weight:700">● Active</span></div>
+          </div>
+        </div>
+
+        <!-- Achievement Badges Card -->
+        <div class="card" style="padding: 24px;">
+          <h2 style="font-family:'Playfair Display',serif;font-size:1.2rem;margin-bottom:8px;color:var(--dark)">🏆 Achievement Badges</h2>
+          <p style="color:var(--muted);font-size:0.85rem">Earn badges by planning trips, saving sights, and exploring Indore.</p>
+          <div class="badge-container">
+            <div class="badge-item locked" id="badgeExplorer">
+              <div class="badge-icon">🧭</div>
+              <div class="badge-name">Explorer</div>
+              <div class="badge-desc">Plan 2+ trips</div>
+            </div>
+            <div class="badge-item locked" id="badgeFoodLover">
+              <div class="badge-icon">😋</div>
+              <div class="badge-name">Food Lover</div>
+              <div class="badge-desc">Save 2+ restaurants</div>
+            </div>
+            <div class="badge-item locked" id="badgeHeritage">
+              <div class="badge-icon">🏛️</div>
+              <div class="badge-name">Heritage Hunter</div>
+              <div class="badge-desc">Save 2+ attractions</div>
+            </div>
+            <div class="badge-item locked" id="badgeTemple">
+              <div class="badge-icon">🛕</div>
+              <div class="badge-name">Temple Explorer</div>
+              <div class="badge-desc">Save a holy site</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Recent Activity Card -->
+        <div class="card" style="padding: 24px;">
+          <h2 style="font-family:'Playfair Display',serif;font-size:1.2rem;margin-bottom:16px;color:var(--dark)">⏳ Recent Activity</h2>
+          
+          <h3 style="font-size:0.9rem;font-weight:700;margin-bottom:10px;color:var(--deep-teal)">Recently Viewed Sights</h3>
+          <div id="recentlyViewedList" style="margin-bottom:20px; background:var(--cream); border:1px solid var(--border); border-radius:12px">
+            <!-- Loaded dynamically -->
+          </div>
+
+          <h3 style="font-size:0.9rem;font-weight:700;margin-bottom:10px;color:var(--deep-teal)">Recently Planned Trips</h3>
+          <div id="recentTripsList" style="background:var(--cream); border:1px solid var(--border); border-radius:12px">
+            <!-- Loaded dynamically -->
+          </div>
+        </div>
+
+        <!-- Wishlist Card -->
+        <div class="card" style="padding: 24px;">
+          <h2 style="font-family:'Playfair Display',serif;font-size:1.2rem;margin-bottom:16px;color:var(--dark)">❤️ My Wishlist</h2>
+          <p style="color:var(--muted);font-size:0.85rem;margin-bottom:16px">Your bookmarked hotels, restaurants, and attractions.</p>
+          <div id="wishlistContainer" style="display:flex; flex-direction:column; gap:12px">
+            <!-- Loaded dynamically -->
+          </div>
+        </div>
+
+        <!-- Feedback History Card -->
+        <div class="card" style="padding: 24px;">
+          <h2 style="font-family:'Playfair Display',serif;font-size:1.2rem;margin-bottom:12px;color:var(--dark)">⭐ Feedback History</h2>
+          <p style="color:var(--muted);font-size:0.85rem;margin-bottom:16px">Your submitted feedback and reviews for Indore Tourism.</p>
+          <div id="feedbackHistoryContainer" style="display:flex; flex-direction:column; gap:12px">
+            <!-- Loaded dynamically -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<div class="toast-container" id="toastContainer"></div>
+<script src="../js/i18n.js"></script>
+<script src="../js/app.js"></script>
+<script>
+  let userEmergencyContacts = [];
+  let selectedAvatarIcon = '👤';
+
+  document.addEventListener('DOMContentLoaded', async () => {
+    const user = getUser();
+    if (!user) {
+      showToast('Please login first', 'error');
+      setTimeout(() => { window.location.href = 'login.html'; }, 1000);
+      return;
+    }
+    
+    // Fetch fresh user data from server
+    try {
+      const data = await apiCall('/auth/me', 'GET', null, true);
+      if (data && data.success) {
+        setUser(data.user);
+        populateProfile(data.user);
+      } else {
+        populateProfile(user);
+      }
+    } catch (err) {
+      populateProfile(user);
+    }
+
+    document.getElementById('profileForm').addEventListener('submit', saveProfile);
+    document.getElementById('passwordForm')?.addEventListener('submit', changePassword);
+  });
+
+  function selectAvatar(icon, el) {
+    selectedAvatarIcon = icon;
+    document.querySelectorAll('.avatar-option').forEach(opt => opt.classList.remove('selected'));
+    el.classList.add('selected');
+    document.getElementById('profileBigAvatar').textContent = icon;
+  }
+
+  function populateProfile(user) {
+    document.getElementById('profName').value = user.name || '';
+    document.getElementById('profEmail').value = user.email || '';
+    document.getElementById('profPhone').value = user.phone || '';
+    document.getElementById('profLocation').value = user.location || '';
+    document.getElementById('profileDisplayName').textContent = user.name || 'Traveler';
+
+    // Set Avatar Option Selection
+    const userAvatar = user.profilePic || '👤';
+    selectedAvatarIcon = userAvatar;
+    document.getElementById('profileBigAvatar').textContent = userAvatar;
+    
+    document.querySelectorAll('.avatar-option').forEach(opt => {
+      if (opt.getAttribute('data-avatar') === userAvatar) {
+        opt.classList.add('selected');
+      } else {
+        opt.classList.remove('selected');
+      }
+    });
+    
+    const roleBadge = document.getElementById('profRoleBadge');
+    if (roleBadge) {
+      roleBadge.innerHTML = user.role === 'admin' 
+        ? '<span class="tag tag-saffron">🛠 Administrator</span>' 
+        : '<span class="tag tag-teal">🗺 Tourist</span>';
+    }
+
+    if (user.createdAt) {
+      document.getElementById('statJoinDate').textContent = new Date(user.createdAt).toLocaleDateString('en-IN', { year: 'numeric', month: 'long', day: 'numeric' });
+    } else {
+      document.getElementById('statJoinDate').textContent = new Date().toLocaleDateString('en-IN', { year: 'numeric', month: 'long', day: 'numeric' });
+    }
+
+    userEmergencyContacts = user.emergencyContacts || [];
+    renderContacts();
+    calculateStats();
+    renderRecentlyViewed();
+    renderRecentTrips();
+    renderProfileWishlist();
+    renderFeedbackHistory();
+  }
+
+  function calculateStats() {
+    const trips = JSON.parse(localStorage.getItem('sts_trips') || '[]');
+    const wishlist = JSON.parse(localStorage.getItem('sts_wishlist') || '[]');
+
+    const tripsPlanned = trips.length;
+    const savedAttractions = wishlist.length;
+    const placesVisited = trips.filter(t => t.status === 'completed').length;
+
+    // Calculate Fav Category
+    let favCategory = 'None';
+    if (wishlist.length > 0) {
+      const counts = {};
+      wishlist.forEach(item => {
+        counts[item.category] = (counts[item.category] || 0) + 1;
+      });
+      let maxCount = 0;
+      for (let cat in counts) {
+        if (counts[cat] > maxCount) {
+          maxCount = counts[cat];
+          favCategory = cat.charAt(0).toUpperCase() + cat.slice(1);
+        }
+      }
+    }
+
+    document.getElementById('statTripsCount').textContent = tripsPlanned;
+    document.getElementById('statSavedCount').textContent = savedAttractions;
+    document.getElementById('statVisitedCount').textContent = placesVisited;
+    document.getElementById('statFavCategory').textContent = favCategory;
+
+    // Render Badges status
+    renderBadges(tripsPlanned, wishlist);
+  }
+
+  function renderBadges(tripsPlanned, wishlist) {
+    // 1. Explorer: 2+ trips
+    const badgeExplorer = document.getElementById('badgeExplorer');
+    if (tripsPlanned >= 2) {
+      badgeExplorer.classList.remove('locked');
+    } else {
+      badgeExplorer.classList.add('locked');
+    }
+
+    // 2. Food Lover: 2+ restaurants saved
+    const badgeFoodLover = document.getElementById('badgeFoodLover');
+    const restaurantCount = wishlist.filter(item => item.category === 'restaurant').length;
+    if (restaurantCount >= 2) {
+      badgeFoodLover.classList.remove('locked');
+    } else {
+      badgeFoodLover.classList.add('locked');
+    }
+
+    // 3. Heritage Hunter: 2+ attractions saved
+    const badgeHeritage = document.getElementById('badgeHeritage');
+    const attractionCount = wishlist.filter(item => item.category === 'attraction').length;
+    if (attractionCount >= 2) {
+      badgeHeritage.classList.remove('locked');
+    } else {
+      badgeHeritage.classList.add('locked');
+    }
+
+    // 4. Temple Explorer: 1+ temple saved/added
+    const badgeTemple = document.getElementById('badgeTemple');
+    const hasTemple = wishlist.some(item => 
+      item.category === 'attraction' && 
+      (item.name.toLowerCase().includes('temple') || item.name.toLowerCase().includes('ganesh') || item.name.toLowerCase().includes('mandir'))
+    );
+    if (hasTemple) {
+      badgeTemple.classList.remove('locked');
+    } else {
+      badgeTemple.classList.add('locked');
+    }
+  }
+
+  function renderRecentlyViewed() {
+    const list = document.getElementById('recentlyViewedList');
+    if (!list) return;
+    const viewed = JSON.parse(localStorage.getItem('sts_viewed') || '[]');
+    if (viewed.length === 0) {
+      list.innerHTML = `<p style="padding:16px;color:var(--muted);font-size:0.88rem;text-align:center">No recently viewed sights.</p>`;
+      return;
+    }
+    list.innerHTML = viewed.map(v => `
+      <div class="activity-item">
+        <div style="font-size:24px">${v.emoji || '🏛️'}</div>
+        <div style="flex:1">
+          <div style="font-weight:700;color:var(--dark);font-size:0.9rem">${v.name}</div>
+          <span class="tag tag-teal" style="font-size:0.65rem;padding:2px 6px;margin:2px 0 0">${v.category}</span>
+        </div>
+        <a href="explore.html" class="btn btn-outline btn-sm" style="padding:4px 8px;font-size:0.75rem">View</a>
+      </div>
+    `).join('');
+  }
+
+  function renderRecentTrips() {
+    const list = document.getElementById('recentTripsList');
+    if (!list) return;
+    const trips = JSON.parse(localStorage.getItem('sts_trips') || '[]');
+    if (trips.length === 0) {
+      list.innerHTML = `<p style="padding:16px;color:var(--muted);font-size:0.88rem;text-align:center">No recently planned trips.</p>`;
+      return;
+    }
+    const recent = trips.slice(-3).reverse();
+    list.innerHTML = recent.map(t => {
+      const statusIcon = t.status === 'completed' ? '✅' : t.status === 'ongoing' ? '🚀' : '📋';
+      return `
+        <div class="activity-item">
+          <div style="font-size:24px">${statusIcon}</div>
+          <div style="flex:1">
+            <div style="font-weight:700;color:var(--dark);font-size:0.9rem">${t.name}</div>
+            <div style="font-size:0.75rem;color:var(--muted)">📍 ${t.destination} · 📅 ${t.date}</div>
+          </div>
+          <a href="trip-planner.html" class="btn btn-outline btn-sm" style="padding:4px 8px;font-size:0.75rem">View</a>
+        </div>
+      `;
+    }).join('');
+  }
+
+  function renderProfileWishlist() {
+    const container = document.getElementById('wishlistContainer');
+    if (!container) return;
+    const wishlist = getWishlist();
+    if (wishlist.length === 0) {
+      container.innerHTML = `<p style="padding:16px;color:var(--muted);font-size:0.88rem;text-align:center">Your wishlist is empty. Explore and bookmark items!</p>`;
+      return;
+    }
+    container.innerHTML = wishlist.map(item => `
+      <div class="contact-item" style="padding:16px">
+        <div style="display:flex;gap:12px;align-items:center">
+          <div style="font-size:28px">${item.emoji || '🏢'}</div>
+          <div>
+            <strong style="color:var(--dark);font-size:0.95rem">${item.name}</strong>
+            <span class="tag tag-gold" style="font-size:0.65rem;padding:2px 6px;margin-left:6px">${item.category}</span>
+            <div style="font-size:0.8rem;color:var(--muted);margin-top:2px">📍 ${item.address}</div>
+            <div style="font-size:0.8rem;color:var(--gold);margin-top:2px">⭐ ${item.rating || '4.5'}</div>
+          </div>
+        </div>
+        <div style="display:flex;gap:8px">
+          <a href="explore.html" class="btn btn-sm btn-outline" style="padding:6px 10px">🗺 Map</a>
+          <button class="btn btn-sm" style="background:#fee2e2;color:#dc2626;padding:6px 10px" onclick="removeFromWishlist('${item.name.replace(/'/g, "\\'")}')">🗑</button>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  function removeFromWishlist(name) {
+    let wishlist = getWishlist();
+    wishlist = wishlist.filter(w => w.name !== name);
+    localStorage.setItem('sts_wishlist', JSON.stringify(wishlist));
+    showToast(`Removed "${name}" from wishlist`, 'info');
+    calculateStats();
+    renderProfileWishlist();
+  }
+
+  function renderContacts() {
+    const container = document.getElementById('contactsList');
+    if (!container) return;
+    if (!userEmergencyContacts.length) {
+      container.innerHTML = '<p style="color:var(--muted);text-align:center;font-size:0.9rem;padding:12px;">No emergency contacts added yet.</p>';
+      return;
+    }
+    container.innerHTML = userEmergencyContacts.map((c, idx) => `
+      <div class="contact-item">
+        <div>
+          <strong style="color:var(--dark)">${c.name}</strong> 
+          <span class="tag tag-teal" style="font-size:0.7rem">${c.relation}</span>
+          <div style="font-size:0.82rem;color:var(--muted);margin-top:2px">📞 ${c.phone}</div>
+        </div>
+        <button class="btn btn-sm" style="background:#fee2e2;color:#dc2626;padding:4px 8px" onclick="removeContact(${idx})">✕</button>
+      </div>
+    `).join('');
+  }
+
+  function addContact() {
+    const name = document.getElementById('newContactName').value.trim();
+    const relation = document.getElementById('newContactRelation').value.trim();
+    const phone = document.getElementById('newContactPhone').value.trim();
+
+    if (!name || !relation || !phone) {
+      showToast('Please fill all fields for the new contact', 'error');
+      return;
+    }
+
+    userEmergencyContacts.push({ name, relation, phone });
+    renderContacts();
+
+    // Reset inputs
+    document.getElementById('newContactName').value = '';
+    document.getElementById('newContactRelation').value = '';
+    document.getElementById('newContactPhone').value = '';
+    showToast('Contact added! Click "Save Changes" to finalize.', 'info');
+  }
+
+  function removeContact(index) {
+    userEmergencyContacts.splice(index, 1);
+    renderContacts();
+    showToast('Contact removed. Save changes to update profile.', 'info');
+  }
+
+  async function saveProfile(e) {
+    e.preventDefault();
+    const name = document.getElementById('profName').value.trim();
+    const email = document.getElementById('profEmail').value.trim();
+    const phone = document.getElementById('profPhone').value.trim();
+    const location = document.getElementById('profLocation').value.trim();
+
+    const btn = e.target.querySelector('[type=submit]');
+    if (btn) { btn.disabled = true; btn.textContent = 'Saving...'; }
+
+    try {
+      const res = await apiCall('/auth/profile', 'PUT', { name, email, phone, location, profilePic: selectedAvatarIcon, emergencyContacts: userEmergencyContacts }, true);
+      if (res && res.success) {
+        setUser(res.user);
+        document.getElementById('profileDisplayName').textContent = res.user.name;
+        loadUserInfo(); 
+        showToast('Profile saved successfully! 🚀', 'success');
+      } else {
+        showToast('Profile saved locally (Offline mode)', 'info');
+        const user = getUser();
+        user.name = name;
+        user.email = email;
+        user.phone = phone;
+        user.location = location;
+        user.profilePic = selectedAvatarIcon;
+        user.emergencyContacts = userEmergencyContacts;
+        setUser(user);
+        loadUserInfo();
+      }
+    } catch (err) {
+      showToast(err.message || 'Failed to save profile', 'error');
+    } finally {
+      if (btn) { btn.disabled = false; btn.textContent = '💾 Save Changes'; }
+    }
+  }
+
+  async function changePassword(e) {
+    e.preventDefault();
+    const currentPassword = document.getElementById('currPassword').value;
+    const newPassword = document.getElementById('newPassword').value;
+    const confirmPassword = document.getElementById('confPassword').value;
+
+    if (newPassword !== confirmPassword) {
+      showToast('New passwords do not match!', 'error');
+      return;
+    }
+    if (newPassword.length < 8) {
+      showToast('New password must be at least 8 characters long', 'error');
+      return;
+    }
+
+    const btn = e.target.querySelector('[type=submit]');
+    if (btn) { btn.disabled = true; btn.textContent = 'Updating...'; }
+
+    try {
+      const res = await apiCall('/auth/change-password', 'PUT', { currentPassword, newPassword }, true);
+      if (res && res.success) {
+        showToast('Password changed successfully!', 'success');
+        e.target.reset();
+      } else {
+        showToast('Offline Mode: Cannot change password offline', 'error');
+      }
+    } catch (err) {
+      showToast(err.message || 'Failed to change password', 'error');
+    } finally {
+      if (btn) { btn.disabled = false; btn.textContent = '🔒 Update Password'; }
+    }
+  }
+
+  function renderFeedbackHistory() {
+    const container = document.getElementById('feedbackHistoryContainer');
+    if (!container) return;
+    const history = JSON.parse(localStorage.getItem('sts_feedback_history') || '[]');
+    if (history.length === 0) {
+      container.innerHTML = `<p style="padding:16px;color:var(--muted);font-size:0.88rem;text-align:center">No feedback submitted yet. Click <a href="feedback.html" style="color:var(--saffron);font-weight:600">here</a> to leave one.</p>`;
+      return;
+    }
+    container.innerHTML = history.map(f => `
+      <div class="contact-item" style="padding:16px; flex-direction:column; align-items:flex-start">
+        <div style="display:flex; justify-content:space-between; width:100%; margin-bottom:6px">
+          <span style="color:var(--gold)">${'★'.repeat(f.rating)}${'☆'.repeat(5 - f.rating)}</span>
+          <span style="font-size:0.75rem; color:var(--muted)">${new Date(f.createdAt).toLocaleDateString('en-IN')}</span>
+        </div>
+        <p style="font-size:0.88rem; color:var(--text); line-height:1.4">${f.message}</p>
+      </div>
+    `).join('');
+  }
+</script>
+</body>
+</html>

@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Smart Tourism Indore – Your Smart Travel Companion</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🗺</text></svg>">
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar" id="navbar">
+  <a href="index.html" class="nav-logo">
+    <div class="logo-icon">🗺</div>
+    <span>Smart Tourism Indore</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="index.html" class="active">Home</a></li>
+    <li><a href="pages/trip-planner.html">Plan Trip</a></li>
+    <li><a href="pages/explore.html">Explore</a></li>
+    <li><a href="pages/sos.html">Safety</a></li>
+    <li><a href="pages/lost-found.html">Lost & Found</a></li>
+  </ul>
+  <div class="nav-actions">
+    <a href="pages/login.html" class="btn btn-outline btn-sm">Login</a>
+    <a href="pages/login.html#signup" class="btn btn-primary btn-sm">Sign Up</a>
+  </div>
+  <div class="hamburger" id="hamburger"><span></span><span></span><span></span></div>
+</nav>
+
+<!-- HERO SECTION -->
+<section class="hero">
+  <div class="hero-bg-pattern"></div>
+  <div class="hero-content">
+    <div class="hero-text">
+      <div class="hero-badge">🏛 Indore, Madhya Pradesh</div>
+      <h1>Your Smart<br><span>Travel Companion</span><br>for Indore</h1>
+      <p>Discover the heart of Madhya Pradesh with AI-powered trip planning, real-time safety alerts, local business discovery, and seamless travel experiences.</p>
+      <div class="hero-actions">
+        <a href="pages/login.html" class="btn btn-primary btn-lg" id="getStartedBtn">🚀 Get Started Free</a>
+        <a href="pages/explore.html" class="btn btn-lg" style="background:rgba(255,255,255,0.12);color:white;border:2px solid rgba(255,255,255,0.3)" id="exploreIndoreBtn">🗺 Explore Indore</a>
+      </div>
+      <div style="display:flex;gap:32px;margin-top:36px;flex-wrap:wrap">
+        <div style="color:rgba(255,255,255,0.8)"><span style="color:var(--gold);font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:700">500+</span><br><span style="font-size:0.82rem">Attractions Listed</span></div>
+        <div style="color:rgba(255,255,255,0.8)"><span style="color:var(--gold);font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:700">10K+</span><br><span style="font-size:0.82rem">Happy Travelers</span></div>
+        <div style="color:rgba(255,255,255,0.8)"><span style="color:var(--gold);font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:700">24/7</span><br><span style="font-size:0.82rem">Safety Support</span></div>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <div class="hero-card">
+        <div style="font-size:0.85rem;color:rgba(255,255,255,0.6);margin-bottom:6px">📍 Currently Exploring</div>
+        <div style="font-size:1.1rem;font-weight:700;color:white;margin-bottom:20px">Rajwada Palace, Indore</div>
+        <div style="background:rgba(255,255,255,0.08);border-radius:12px;height:160px;display:flex;align-items:center;justify-content:center;font-size:64px;margin-bottom:20px">🏰</div>
+        <div class="hero-stats">
+          <div class="stat-box"><div class="num">4.8</div><div class="lbl">⭐ Rating</div></div>
+          <div class="stat-box"><div class="num">2.3km</div><div class="lbl">📍 Distance</div></div>
+          <div class="stat-box"><div class="num">Free</div><div class="lbl">🎟 Entry</div></div>
+          <div class="stat-box"><div class="num">9am-6pm</div><div class="lbl">🕐 Timing</div></div>
+        </div>
+      </div>
+      <div class="floating-badge top-right">🚨 SOS Active <span style="color:var(--success)">●</span></div>
+      <div class="floating-badge bottom-left">🌍 12 Languages</div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<div style="background:white;padding:16px 0;border-bottom:1px solid var(--border)">
+  <div style="max-width:1200px;margin:0 auto;padding:0 48px;display:flex;gap:40px;overflow-x:auto;align-items:center;justify-content:center;flex-wrap:wrap">
+    <span style="color:var(--muted);font-size:0.85rem;font-weight:600;white-space:nowrap">✨ Trusted by tourists from:</span>
+    <span style="font-weight:700;color:var(--text)">Delhi</span>
+    <span style="font-weight:700;color:var(--text)">Mumbai</span>
+    <span style="font-weight:700;color:var(--text)">Bangalore</span>
+    <span style="font-weight:700;color:var(--text)">Hyderabad</span>
+    <span style="font-weight:700;color:var(--text)">Pune</span>
+    <span style="font-weight:700;color:var(--text)">+ International Visitors</span>
+  </div>
+</div>
+
+<div style="background:var(--cream)">
+  <div class="section">
+    <div class="section-header">
+      <div class="section-label">Core Features</div>
+      <h2>Everything You Need<br>to Explore Indore</h2>
+      <p>A complete digital companion with all tools to make your Indore trip unforgettable and safe.</p>
+    </div>
+    <div class="features-grid">
+      <div class="feature-card" onclick="window.location.href='pages/trip-planner.html'" style="cursor:pointer">
+        <div class="feature-icon" style="background:rgba(255,107,43,0.12)">🗺️</div>
+        <h3>Smart Trip Planner</h3>
+        <p>Create personalized itineraries with timing, destinations, and notes. Plan your entire Indore trip in minutes.</p>
+        <div style="margin-top:16px"><a href="pages/trip-planner.html" style="color:var(--saffron);font-weight:700;font-size:0.88rem;text-decoration:none">Plan Now →</a></div>
+      </div>
+      <div class="feature-card" onclick="window.location.href='pages/sos.html'" style="cursor:pointer">
+        <div class="feature-icon" style="background:rgba(231,76,60,0.12)">🚨</div>
+        <h3>SOS Emergency</h3>
+        <p>One-tap emergency alert that instantly shares your location with police, hospitals, and emergency contacts.</p>
+        <div style="margin-top:16px"><a href="pages/sos.html" style="color:var(--danger);font-weight:700;font-size:0.88rem;text-decoration:none">Access SOS →</a></div>
+      </div>
+      <div class="feature-card" onclick="window.location.href='pages/translation.html'" style="cursor:pointer">
+        <div class="feature-icon" style="background:rgba(10,77,92,0.12)">🌍</div>
+        <h3>Real-Time Translation</h3>
+        <p>Instantly translate text and access common Hindi phrases to communicate effortlessly with locals.</p>
+        <div style="margin-top:16px"><a href="pages/translation.html" style="color:var(--deep-teal);font-weight:700;font-size:0.88rem;text-decoration:none">Translate →</a></div>
+      </div>
+      <div class="feature-card" onclick="window.location.href='pages/explore.html'" style="cursor:pointer">
+        <div class="feature-icon" style="background:rgba(244,185,66,0.15)">🏨</div>
+        <h3>Local Business Discovery</h3>
+        <p>Find the best hotels, restaurants, and shops in Indore with ratings, reviews, and map directions.</p>
+        <div style="margin-top:16px"><a href="pages/explore.html" style="color:#c8920a;font-weight:700;font-size:0.88rem;text-decoration:none">Explore →</a></div>
+      </div>
+      <div class="feature-card" onclick="window.location.href='pages/lost-found.html'" style="cursor:pointer">
+        <div class="feature-icon" style="background:rgba(39,174,96,0.12)">🔍</div>
+        <h3>Lost & Found</h3>
+        <p>Report lost belongings or check found items list. Our community helps reunite travelers with their things.</p>
+        <div style="margin-top:16px"><a href="pages/lost-found.html" style="color:var(--success);font-weight:700;font-size:0.88rem;text-decoration:none">View Items →</a></div>
+      </div>
+      <div class="feature-card" onclick="window.location.href='pages/dashboard.html'" style="cursor:pointer">
+        <div class="feature-icon" style="background:rgba(155,89,182,0.12)">🔔</div>
+        <h3>Smart Notifications</h3>
+        <p>Get real-time alerts for safety advisories, local offers, trip reminders, and weather updates.</p>
+        <div style="margin-top:16px"><a href="pages/dashboard.html" style="color:#8e44ad;font-weight:700;font-size:0.88rem;text-decoration:none">View Alerts →</a></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ATTRACTIONS HIGHLIGHT -->
+<div style="background:white">
+  <div class="section">
+    <div class="section-header">
+      <div class="section-label">Top Attractions</div>
+      <h2>Must-Visit Places<br>in Indore</h2>
+    </div>
+    <div class="cards-grid">
+      <div class="card">
+        <div class="card-img">🏰</div>
+        <div class="card-body">
+          <h3>Rajwada Palace</h3>
+          <p>Historic 7-story palace in the heart of Indore, a symbol of Holkar dynasty's grandeur.</p>
+          <div class="flex items-center justify-between mt-2">
+            <span class="rating">⭐ 4.8 (2.1k reviews)</span>
+            <span class="tag tag-teal">Free Entry</span>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-img">🕌</div>
+        <div class="card-body">
+          <h3>Lal Bagh Palace</h3>
+          <p>Magnificent palace with European architectural influences, set amidst beautiful gardens.</p>
+          <div class="flex items-center justify-between mt-2">
+            <span class="rating">⭐ 4.6 (1.8k reviews)</span>
+            <span class="tag tag-saffron">₹50 Entry</span>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-img">🛕</div>
+        <div class="card-body">
+          <h3>Khajrana Ganesh Temple</h3>
+          <p>One of the most revered temples in Indore, visited by thousands of devotees daily.</p>
+          <div class="flex items-center justify-between mt-2">
+            <span class="rating">⭐ 4.9 (5.2k reviews)</span>
+            <span class="tag tag-gold">Free Entry</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div style="text-align:center;margin-top:32px">
+      <a href="pages/explore.html" class="btn btn-primary">View All Attractions 🗺</a>
+    </div>
+  </div>
+</div>
+
+<!-- CTA -->
+<div style="background:linear-gradient(135deg,var(--deep-teal),var(--dark));padding:80px 48px;text-align:center">
+  <div style="max-width:600px;margin:0 auto">
+    <div style="font-size:48px;margin-bottom:16px">🏛</div>
+    <h2 style="font-family:'Playfair Display',serif;font-size:2.4rem;color:white;margin-bottom:16px">Ready to Explore Indore?</h2>
+    <p style="color:rgba(255,255,255,0.75);font-size:1.05rem;margin-bottom:36px">Join thousands of travelers who use Smart Tourism Indore for a safe, enjoyable, and memorable experience.</p>
+    <div style="display:flex;gap:16px;justify-content:center;flex-wrap:wrap">
+      <a href="pages/login.html" class="btn btn-primary btn-lg">Create Free Account</a>
+      <a href="pages/sos.html" class="btn btn-lg" style="background:rgba(231,76,60,0.9);color:white">🚨 SOS Emergency</a>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <div class="logo">🗺 Smart Tourism Indore</div>
+      <p>Your intelligent travel companion for exploring the heart of Madhya Pradesh. Safe, smart, and seamless travel experiences.</p>
+      <div style="display:flex;gap:12px;margin-top:20px">
+        <a href="#" style="width:36px;height:36px;background:rgba(255,255,255,0.1);border-radius:8px;display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,0.7);text-decoration:none;font-size:18px">📘</a>
+        <a href="#" style="width:36px;height:36px;background:rgba(255,255,255,0.1);border-radius:8px;display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,0.7);text-decoration:none;font-size:18px">📸</a>
+        <a href="#" style="width:36px;height:36px;background:rgba(255,255,255,0.1);border-radius:8px;display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,0.7);text-decoration:none;font-size:18px">🐦</a>
+      </div>
+    </div>
+    <div class="footer-col">
+      <h4>Features</h4>
+      <ul>
+        <li><a href="pages/trip-planner.html">Trip Planner</a></li>
+        <li><a href="pages/explore.html">Local Listings</a></li>
+        <li><a href="pages/sos.html">SOS Emergency</a></li>
+        <li><a href="pages/translation.html">Translation</a></li>
+        <li><a href="pages/lost-found.html">Lost & Found</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Explore</h4>
+      <ul>
+        <li><a href="pages/explore.html">Hotels</a></li>
+        <li><a href="pages/explore.html">Restaurants</a></li>
+        <li><a href="pages/explore.html">Attractions</a></li>
+        <li><a href="pages/explore.html">Shopping</a></li>
+        <li><a href="pages/explore.html">Transport</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Contact</h4>
+      <ul>
+        <li><a href="#">📧 info@smarttourism.in</a></li>
+        <li><a href="#">📞 +91 731 000 0000</a></li>
+        <li><a href="#">📍 Indore, MP 452001</a></li>
+        <li><a href="pages/admin.html">Admin Panel</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2024 Smart Tourism Indore. Minor Project – College Submission.</span>
+    <span>Made with ❤️ for Indore Tourism</span>
+  </div>
+</footer>
+
+<div class="toast-container" id="toastContainer"></div>
+<script src="js/app.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lost & Found – Smart Tourism Indore</title>
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+<nav class="navbar">
+  <a href="../index.html" class="nav-logo">
+    <div class="logo-icon">🗺</div>
+    <span>Smart Tourism Indore</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="../index.html">Home</a></li>
+    <li><a href="trip-planner.html">Plan Trip</a></li>
+    <li><a href="explore.html">Explore</a></li>
+    <li><a href="sos.html">Safety</a></li>
+  </ul>
+  <div class="nav-actions">
+    <a href="sos.html" class="btn btn-danger btn-sm">🚨 SOS</a>
+    <a href="dashboard.html" class="btn btn-outline btn-sm">Dashboard</a>
+  </div>
+</nav>
+
+<div style="background:linear-gradient(135deg,var(--deep-teal),var(--dark));padding:120px 48px 64px;text-align:center">
+  <div class="section-label">Community Help</div>
+  <h1 style="font-family:'Playfair Display',serif;font-size:2.6rem;color:white;margin-bottom:12px">🔍 Lost & Found</h1>
+  <p style="color:rgba(255,255,255,0.75);font-size:1rem;max-width:500px;margin:0 auto">Report a lost item or help someone find their belongings. Our tourist community helps each other out!</p>
+</div>
+
+<div class="section" style="padding-top:48px">
+  <!-- ACTIONS -->
+  <div class="flex items-center justify-between mb-4" style="flex-wrap:wrap;gap:12px">
+    <div class="lf-tabs">
+      <button class="lf-tab active" onclick="switchTab('lost',this)">😟 Lost Items</button>
+      <button class="lf-tab" onclick="switchTab('found',this)">😊 Found Items</button>
+    </div>
+    <button class="btn btn-primary" onclick="openModal('lfModal')">+ Report Item</button>
+  </div>
+
+  <!-- SEARCH -->
+  <div class="search-bar mb-3" style="max-width:100%">
+    <span class="search-icon">🔍</span>
+    <input type="text" placeholder="Search lost or found items..." oninput="searchLF(this.value)">
+  </div>
+
+  <!-- LOST ITEMS -->
+  <div id="lostPanel">
+    <h2 style="font-family:'Playfair Display',serif;font-size:1.4rem;margin-bottom:20px">😟 Reported Lost Items</h2>
+    <div class="cards-grid" id="lostItemsGrid"></div>
+  </div>
+
+  <!-- FOUND ITEMS -->
+  <div id="foundPanel" class="hidden">
+    <h2 style="font-family:'Playfair Display',serif;font-size:1.4rem;margin-bottom:20px">😊 Found Items – Claim Yours!</h2>
+    <div class="cards-grid" id="foundItemsGrid"></div>
+  </div>
+
+  <!-- INFO BANNER -->
+  <div style="background:rgba(10,77,92,0.08);border:2px solid rgba(10,77,92,0.15);border-radius:var(--radius);padding:24px;margin-top:40px">
+    <h3 style="font-family:'Playfair Display',serif;font-size:1.2rem;margin-bottom:12px">📋 How It Works</h3>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px">
+      <div style="display:flex;gap:12px;align-items:flex-start">
+        <div style="background:var(--saffron);color:white;width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;flex-shrink:0">1</div>
+        <div><div style="font-weight:700;margin-bottom:4px">Report</div><div style="color:var(--muted);font-size:0.88rem">Fill the lost/found item form with details and contact info.</div></div>
+      </div>
+      <div style="display:flex;gap:12px;align-items:flex-start">
+        <div style="background:var(--saffron);color:white;width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;flex-shrink:0">2</div>
+        <div><div style="font-weight:700;margin-bottom:4px">Match</div><div style="color:var(--muted);font-size:0.88rem">Our system alerts users if a matching item is reported.</div></div>
+      </div>
+      <div style="display:flex;gap:12px;align-items:flex-start">
+        <div style="background:var(--saffron);color:white;width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;flex-shrink:0">3</div>
+        <div><div style="font-weight:700;margin-bottom:4px">Connect</div><div style="color:var(--muted);font-size:0.88rem">Contact the person directly via the provided phone number.</div></div>
+      </div>
+      <div style="display:flex;gap:12px;align-items:flex-start">
+        <div style="background:var(--success);color:white;width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;flex-shrink:0">✓</div>
+        <div><div style="font-weight:700;margin-bottom:4px">Reunited!</div><div style="color:var(--muted);font-size:0.88rem">Mark the item as resolved once the owner is found.</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- REPORT MODAL -->
+<div class="modal-overlay" id="lfModal">
+  <div class="modal">
+    <div class="modal-header">
+      <h2 style="font-family:'Playfair Display',serif;font-size:1.3rem">📋 Report an Item</h2>
+      <button class="modal-close" onclick="closeModal('lfModal')">✕</button>
+    </div>
+    <form id="lfForm">
+      <div class="form-group">
+        <label>Report Type *</label>
+        <select id="lfType" required>
+          <option value="lost">😟 I Lost an Item</option>
+          <option value="found">😊 I Found an Item</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Item Name *</label>
+        <input type="text" id="lfItemName" placeholder="e.g. Blue Backpack, iPhone 13, Wallet" required>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Location *</label>
+          <input type="text" id="lfLocation" placeholder="e.g. Rajwada Palace" required>
+        </div>
+        <div class="form-group">
+          <label>Date *</label>
+          <input type="date" id="lfDate" required>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Description</label>
+        <textarea id="lfDesc" placeholder="Color, brand, identifying features..."></textarea>
+      </div>
+      <div class="form-group">
+        <label>Contact Number *</label>
+        <input type="tel" id="lfContact" placeholder="+91 9876543210" required>
+      </div>
+      <div style="display:flex;gap:12px">
+        <button type="button" class="btn btn-outline" style="flex:1;justify-content:center" onclick="closeModal('lfModal')">Cancel</button>
+        <button type="submit" class="btn btn-primary" style="flex:1;justify-content:center">📤 Submit Report</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="toast-container" id="toastContainer"></div>
+<script src="../js/app.js"></script>
+<script>
+  function switchTab(tab, btn) {
+    document.getElementById('lostPanel').classList.toggle('hidden', tab !== 'lost');
+    document.getElementById('foundPanel').classList.toggle('hidden', tab !== 'found');
+    document.querySelectorAll('.lf-tab').forEach(t => t.classList.remove('active'));
+    btn.classList.add('active');
+  }
+  function searchLF(q) {
+    document.querySelectorAll('#lostItemsGrid .card, #foundItemsGrid .card').forEach(c => {
+      c.style.display = c.textContent.toLowerCase().includes(q.toLowerCase()) ? 'block' : 'none';
+    });
+  }
+</script>
+</body>
+</html>

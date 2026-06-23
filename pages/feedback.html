@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>User Feedback – Smart Tourism Indore</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    .star-rating {
+      display: flex;
+      gap: 10px;
+      font-size: 32px;
+      cursor: pointer;
+      margin-bottom: 8px;
+      user-select: none;
+    }
+    .star-rating .star {
+      color: #ccc;
+      transition: transform 0.2s, color 0.2s;
+    }
+    .star-rating .star:hover {
+      transform: scale(1.2);
+    }
+    .star-rating .star.selected {
+      color: var(--gold);
+      text-shadow: 0 0 8px rgba(244, 185, 66, 0.4);
+    }
+    .feedback-container {
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    .anonymous-layout {
+      padding: 100px 24px 48px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: calc(100vh - 72px);
+    }
+    .anonymous-card {
+      background: white;
+      border-radius: var(--radius);
+      padding: 40px;
+      box-shadow: var(--shadow-lg);
+      width: 100%;
+      max-width: 550px;
+      border: 1px solid var(--border);
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+  <a href="../index.html" class="nav-logo">
+    <div class="logo-icon">🗺</div>
+    <span data-i18n="nav.logo">Smart Tourism Indore</span>
+  </a>
+  <div class="nav-actions">
+    <button class="lang-toggle-btn" onclick="I18N.toggle()"><span class="lang-flag">🇬🇧</span> English</button>
+    <a href="sos.html" class="btn btn-danger btn-sm" data-i18n="cta.btn.sos">🚨 SOS Emergency</a>
+    <span id="navAuthBtn">
+      <a href="login.html" class="btn btn-outline btn-sm">Login</a>
+    </span>
+  </div>
+</nav>
+
+<!-- DUAL MODE LAYOUT WRAPPER -->
+<div id="layoutWrapper" class="dashboard-layout">
+  
+  <!-- SIDEBAR (Shown only when logged in) -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-user">
+      <div class="avatar" id="sidebarAvatar">👤</div>
+      <div class="info">
+        <div class="name" id="sidebarName">Traveler</div>
+        <div class="role" id="sidebarRole">🗺 Tourist</div>
+      </div>
+    </div>
+    <div class="sidebar-section-label">Main</div>
+    <ul class="sidebar-nav">
+      <li><a href="dashboard.html">🏠 <span>Dashboard</span></a></li>
+      <li><a href="trip-planner.html">🗺 <span>My Trips</span></a></li>
+      <li><a href="explore.html">🏨 <span>Explore</span></a></li>
+      <li><a href="translation.html">🌍 <span>Translation</span></a></li>
+    </ul>
+    <div class="sidebar-section-label">Safety</div>
+    <ul class="sidebar-nav">
+      <li><a href="sos.html">🚨 <span>SOS Emergency</span></a></li>
+      <li><a href="lost-found.html">🔍 <span>Lost & Found</span></a></li>
+    </ul>
+    <div class="sidebar-section-label">Account</div>
+    <ul class="sidebar-nav">
+      <li><a href="profile.html">👤 <span>Profile</span></a></li>
+      <li><a href="settings.html">⚙️ <span>Settings</span></a></li>
+      <li><a href="#" onclick="logout()" style="color:rgba(231,76,60,0.8)">🚪 <span>Logout</span></a></li>
+    </ul>
+  </aside>
+
+  <!-- MAIN CONTENT AREA -->
+  <main class="main-content" id="mainContent">
+    <div class="feedback-container" id="feedbackFormContainer">
+      <div class="page-header">
+        <h1>🌟 Share Your Feedback</h1>
+        <p>Your thoughts and experiences help us make Indore a better place for tourists worldwide.</p>
+      </div>
+
+      <div class="card" style="padding: 32px;">
+        <form id="feedbackForm">
+          <div class="form-group">
+            <label>Full Name</label>
+            <input type="text" id="feedName" placeholder="Enter your name" required>
+          </div>
+          
+          <div class="form-group">
+            <label>Email Address</label>
+            <input type="email" id="feedEmail" placeholder="you@example.com" required>
+          </div>
+
+          <div class="form-group">
+            <label>Overall Experience Rating</label>
+            <div class="star-rating" id="starRating">
+              <span class="star" data-value="1">★</span>
+              <span class="star" data-value="2">★</span>
+              <span class="star" data-value="3">★</span>
+              <span class="star" data-value="4">★</span>
+              <span class="star" data-value="5">★</span>
+            </div>
+            <div style="font-size: 0.85rem; color: var(--muted); margin-top: 4px;" id="ratingText">Select rating (click on stars)</div>
+            <input type="hidden" id="feedRating" value="5" required>
+          </div>
+
+          <div class="form-group">
+            <label>Feedback Message</label>
+            <textarea id="feedMessage" placeholder="Tell us about your trip, suggestions, or any issue you faced in Indore..." required></textarea>
+          </div>
+
+          <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center;" id="submitFeedBtn">
+            📤 Submit Feedback
+          </button>
+        </form>
+      </div>
+    </div>
+  </main>
+</div>
+
+<div class="toast-container" id="toastContainer"></div>
+
+<script src="../js/i18n.js"></script>
+<script src="../js/app.js"></script>
+<script>
+  let selectedRating = 5;
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const user = getUser();
+    const wrapper = document.getElementById('layoutWrapper');
+    const sidebar = document.getElementById('sidebar');
+    const mainContent = document.getElementById('mainContent');
+    const navAuthBtn = document.getElementById('navAuthBtn');
+    
+    // UI layout adaptation based on auth state
+    if (user) {
+      // Authenticated User: keep sidebar dashboard layout
+      wrapper.className = "dashboard-layout";
+      sidebar.classList.remove('hidden');
+      mainContent.style.marginLeft = "";
+      
+      // Update nav auth controls
+      navAuthBtn.innerHTML = `<button class="btn btn-outline btn-sm" onclick="logout()">Logout</button>`;
+      
+      // Prefill fields
+      document.getElementById('feedName').value = user.name || '';
+      document.getElementById('feedEmail').value = user.email || '';
+      
+      // Update sidebar details
+      const sidebarName = document.getElementById('sidebarName');
+      const sidebarAvatar = document.getElementById('sidebarAvatar');
+      const sidebarRole = document.getElementById('sidebarRole');
+      if (sidebarName && user.name) sidebarName.textContent = user.name.charAt(0).toUpperCase() + user.name.slice(1);
+      if (sidebarAvatar && user.profilePic) sidebarAvatar.textContent = user.profilePic;
+      if (sidebarRole) sidebarRole.textContent = user.role === 'admin' ? '🛠 Admin' : '🗺 Tourist';
+    } else {
+      // Anonymous User: switch to full screen centered landing style
+      wrapper.className = "anonymous-layout";
+      sidebar.classList.add('hidden');
+      mainContent.style.marginLeft = "0";
+      mainContent.style.padding = "0";
+      
+      // Wrap the content in the anonymous styling card
+      const formContainer = document.getElementById('feedbackFormContainer');
+      formContainer.className = "anonymous-card";
+      
+      navAuthBtn.innerHTML = `<a href="login.html" class="btn btn-outline btn-sm">Login</a>`;
+    }
+
+    // Initialize rating star controls
+    initStars();
+
+    // Form submission listener
+    document.getElementById('feedbackForm').onsubmit = handleFeedbackSubmit;
+  });
+
+  function initStars() {
+    const stars = document.querySelectorAll('#starRating .star');
+    const ratingInput = document.getElementById('feedRating');
+    const ratingText = document.getElementById('ratingText');
+    const ratingLabels = {
+      1: 'Poor 😞',
+      2: 'Fair 😐',
+      3: 'Good 🙂',
+      4: 'Very Good 😊',
+      5: 'Excellent! Outstanding experience 🌟'
+    };
+
+    function highlightStars(val) {
+      stars.forEach(s => {
+        const starVal = parseInt(s.getAttribute('data-value'));
+        if (starVal <= val) {
+          s.classList.add('selected');
+        } else {
+          s.classList.remove('selected');
+        }
+      });
+      ratingText.textContent = ratingLabels[val] || '';
+    }
+
+    // Default load: 5 stars selected
+    highlightStars(5);
+
+    stars.forEach(star => {
+      // Hover effects
+      star.addEventListener('mouseover', () => {
+        const hoverVal = parseInt(star.getAttribute('data-value'));
+        stars.forEach(s => {
+          if (parseInt(s.getAttribute('data-value')) <= hoverVal) {
+            s.classList.add('selected');
+          } else {
+            s.classList.remove('selected');
+          }
+        });
+        ratingText.textContent = ratingLabels[hoverVal] || '';
+      });
+
+      // Mouse leaves star container -> restore clicked selection
+      star.addEventListener('mouseout', () => {
+        highlightStars(selectedRating);
+      });
+
+      // Handle Click Selection
+      star.addEventListener('click', () => {
+        selectedRating = parseInt(star.getAttribute('data-value'));
+        ratingInput.value = selectedRating;
+        highlightStars(selectedRating);
+      });
+    });
+  }
+
+  async function handleFeedbackSubmit(e) {
+    e.preventDefault();
+    const name = document.getElementById('feedName').value.trim();
+    const email = document.getElementById('feedEmail').value.trim();
+    const rating = document.getElementById('feedRating').value;
+    const message = document.getElementById('feedMessage').value.trim();
+
+    if (!name || !email || !message) {
+      showToast('Please fill out all required fields.', 'error');
+      return;
+    }
+
+    const btn = document.getElementById('submitFeedBtn');
+    btn.disabled = true;
+    btn.textContent = 'Submitting Feedback...';
+
+    try {
+      const res = await apiCall('/feedback', 'POST', { name, email, rating, message });
+      if (res && res.success) {
+        showToast(res.message, 'success');
+        
+        // Save locally for feedback history backup
+        const user = getUser();
+        const localHistory = JSON.parse(localStorage.getItem('sts_feedback_history') || '[]');
+        localHistory.unshift({
+          name,
+          email,
+          rating: parseInt(rating),
+          message,
+          createdAt: new Date().toISOString()
+        });
+        localStorage.setItem('sts_feedback_history', JSON.stringify(localHistory));
+
+        document.getElementById('feedMessage').value = '';
+        setTimeout(() => {
+          const user = getUser();
+          if (user) {
+            window.location.href = 'dashboard.html';
+          } else {
+            window.location.href = '../index.html';
+          }
+        }, 2000);
+      } else {
+        // Fallback for offline mode
+        showToast('Feedback submitted locally! (Offline fallback) 🌟', 'success');
+        const localHistory = JSON.parse(localStorage.getItem('sts_feedback_history') || '[]');
+        localHistory.unshift({
+          name,
+          email,
+          rating: parseInt(rating),
+          message,
+          createdAt: new Date().toISOString()
+        });
+        localStorage.setItem('sts_feedback_history', JSON.stringify(localHistory));
+        document.getElementById('feedMessage').value = '';
+        setTimeout(() => {
+          const user = getUser();
+          if (user) {
+            window.location.href = 'dashboard.html';
+          } else {
+            window.location.href = '../index.html';
+          }
+        }, 2000);
+      }
+    } catch (err) {
+      showToast(err.message || 'Failed to submit feedback.', 'error');
+    } finally {
+      btn.disabled = false;
+      btn.textContent = '📤 Submit Feedback';
+    }
+  }
+</script>
+</body>
+</html>

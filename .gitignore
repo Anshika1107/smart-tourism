@@ -1,0 +1,16 @@
+# Dependency directories
+node_modules/
+server/node_modules/
+
+# Environment variables (secret keys, credentials)
+.env
+server/.env
+
+# Local SQLite databases (except fallback data files)
+server/data/*.db
+server/data/*.db-journal
+server/data/*.db-wal
+
+# OS files
+.DS_Store
+Thumbs.db

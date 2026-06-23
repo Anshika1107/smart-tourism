@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login – Smart Tourism Indore</title>
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+<nav class="navbar">
+  <a href="../index.html" class="nav-logo">
+    <div class="logo-icon">🗺</div>
+    <span>Smart Tourism Indore</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="../index.html">Home</a></li>
+    <li><a href="trip-planner.html">Plan Trip</a></li>
+    <li><a href="explore.html">Explore</a></li>
+    <li><a href="sos.html">Safety</a></li>
+  </ul>
+  <div class="nav-actions">
+    <a href="login.html" class="btn btn-primary btn-sm">Login</a>
+  </div>
+</nav>
+
+<div class="auth-page">
+  <div class="auth-container">
+
+    <!-- LOGIN FORM -->
+    <div class="auth-card" id="loginCard">
+      <div class="auth-header">
+        <div class="logo">🗺 Smart Tourism Indore</div>
+        <h2>Welcome Back!</h2>
+        <p>Login to access your travel dashboard</p>
+      </div>
+      <form id="loginForm">
+        <div class="form-group">
+          <label>Email Address</label>
+          <input type="email" id="loginEmail" placeholder="you@example.com" required>
+        </div>
+        <div class="form-group">
+          <label>Password</label>
+          <input type="password" id="loginPassword" placeholder="Enter your password" required>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:24px">
+          <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:0.9rem">
+            <input type="checkbox" style="width:auto"> Remember me
+          </label>
+          <a href="#" style="color:var(--saffron);font-size:0.88rem;text-decoration:none;font-weight:600">Forgot Password?</a>
+        </div>
+        <button type="submit" class="btn btn-primary" style="width:100%;justify-content:center">🚀 Login</button>
+      </form>
+      <div class="auth-switch">
+        Don't have an account? <a href="#" onclick="toggleForm()">Sign Up Free</a>
+      </div>
+    </div>
+
+    <!-- SIGNUP FORM -->
+    <div class="auth-card hidden" id="signupCard">
+      <div class="auth-header">
+        <div class="logo">🗺 Smart Tourism Indore</div>
+        <h2>Create Account</h2>
+        <p>Join thousands of smart travelers exploring Indore</p>
+      </div>
+      <form id="signupForm">
+        <div class="form-group">
+          <label>Full Name</label>
+          <input type="text" id="signupName" placeholder="Your full name" required>
+        </div>
+        <div class="form-group">
+          <label>Email Address</label>
+          <input type="email" id="signupEmail" placeholder="you@example.com" required>
+        </div>
+        <div class="form-group">
+          <label>Phone Number</label>
+          <input type="tel" id="signupPhone" placeholder="+91 9876543210">
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Password</label>
+            <input type="password" id="signupPassword" placeholder="Min 6 characters" required>
+          </div>
+          <div class="form-group">
+            <label>Confirm Password</label>
+            <input type="password" id="signupConfirm" placeholder="Repeat password" required>
+          </div>
+        </div>
+        <div style="margin-bottom:20px">
+          <label style="display:flex;align-items:flex-start;gap:10px;cursor:pointer;font-size:0.88rem;color:var(--muted)">
+            <input type="checkbox" style="width:auto;margin-top:3px" required>
+            I agree to the <a href="#" style="color:var(--saffron)">Terms of Service</a> and <a href="#" style="color:var(--saffron)">Privacy Policy</a>
+          </label>
+        </div>
+        <button type="submit" class="btn btn-primary" style="width:100%;justify-content:center">✨ Create Account</button>
+      </form>
+      <div class="auth-divider">or continue with</div>
+      <div style="display:flex;gap:12px;margin-bottom:24px">
+        <button class="btn btn-outline" style="flex:1;justify-content:center" onclick="handleGoogleLogin()">🔵 Google</button>
+        <button class="btn btn-outline" style="flex:1;justify-content:center" onclick="handleFacebookLogin()">🔷 Facebook</button>
+      </div>
+      <div class="auth-switch">
+        Already have an account? <a href="#" onclick="toggleForm()">Login</a>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="toast-container" id="toastContainer"></div>
+<script src="../js/app.js"></script>
+<script>
+  // Check if URL has #signup
+  if (window.location.hash === '#signup') toggleForm();
+  function toggleForm() {
+    document.getElementById('loginCard').classList.toggle('hidden');
+    document.getElementById('signupCard').classList.toggle('hidden');
+  }
+</script>
+</body>
+</html>
