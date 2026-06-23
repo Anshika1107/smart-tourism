@@ -452,6 +452,19 @@
     window.location.reload();
   }
 
+  function showToast(message, type = 'info') {
+    const container = document.getElementById('toastContainer');
+    if (!container) return;
+    const toast = document.createElement('div');
+    toast.className = 'toast ' + type;
+    toast.textContent = message;
+    container.appendChild(toast);
+    setTimeout(() => {
+      toast.classList.add('fade-out');
+      setTimeout(() => toast.remove(), 300);
+    }, 3000);
+  }
+
   function showAdminTab(name) {
     document.querySelectorAll('[id^="admin-"]').forEach(t => t.classList.add('hidden'));
     document.getElementById('admin-' + name).classList.remove('hidden');

@@ -413,7 +413,7 @@ app.put('/api/listings/:id', protect, adminOnly, (req, res) => {
 
 // GET /api/lost-found
 app.get('/api/lost-found', (req, res) => {
-  const { type, status = 'open', search } = req.query;
+  const { type, status, search } = req.query;
   let items;
 
   if (type && status) {
