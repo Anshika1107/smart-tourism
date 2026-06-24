@@ -229,6 +229,9 @@ class JSONDatabase {
       callLogs: {
         create: this.prepare(`INSERT INTO call_logs (user_id, user_name, called_to, called_number, location_lat, location_lng, location_addr) VALUES (?,?,?,?,?,?,?)`),
       },
+      feedback: {
+        create: this.prepare(`INSERT INTO feedback (user_id, name, email, rating, message) VALUES (?,?,?,?,?)`),
+      },
     };
   }
 }
