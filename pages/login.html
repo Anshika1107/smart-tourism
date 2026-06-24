@@ -45,7 +45,7 @@
           <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:0.9rem">
             <input type="checkbox" style="width:auto"> Remember me
           </label>
-          <a href="#" style="color:var(--saffron);font-size:0.88rem;text-decoration:none;font-weight:600">Forgot Password?</a>
+          <a href="#" onclick="handleForgotPassword(event)" style="color:var(--saffron);font-size:0.88rem;text-decoration:none;font-weight:600">Forgot Password?</a>
         </div>
         <button type="submit" class="btn btn-primary" style="width:100%;justify-content:center">🚀 Login</button>
       </form>
@@ -106,6 +106,7 @@
 </div>
 
 <div class="toast-container" id="toastContainer"></div>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="../js/app.js"></script>
 <script>
   // Check if URL has #signup

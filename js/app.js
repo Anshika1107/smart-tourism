@@ -263,6 +263,91 @@ function updateNavbar() {
   }
 }
 
+async function handleForgotPassword(e) {
+  if (e) e.preventDefault();
+  
+  const { value: email } = await Swal.fire({
+    title: 'Forgot Password',
+    input: 'email',
+    inputLabel: 'Enter your registered email address',
+    inputPlaceholder: 'you@example.com',
+    confirmButtonColor: '#0A4D5C',
+    confirmButtonText: 'Verify Email',
+    showCancelButton: true,
+    cancelButtonColor: '#d33'
+  });
+
+  if (!email) return;
+
+  Swal.showLoading();
+
+  try {
+    // Call forgot-password verify API
+    let res = await apiCall('/auth/forgot-password', 'POST', { email });
+    
+    // Offline simulation logic
+    const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+    if (!res && isLocal) {
+      if (email === 'admin@smarttourism.in' || email === 'rahul@example.com' || email === 'dheeraj222@gmail.com') {
+        res = { success: true, message: 'Account verified (Simulation).' };
+      } else {
+        throw new Error('Email not registered in offline simulation database. Try rahul@example.com or admin@smarttourism.in.');
+      }
+    }
+
+    if (res && res.success) {
+      Swal.close();
+      const { value: newPassword } = await Swal.fire({
+        title: 'Reset Password',
+        input: 'password',
+        inputLabel: `Enter new password for ${email}`,
+        inputPlaceholder: 'At least 6 characters',
+        confirmButtonColor: '#0A4D5C',
+        confirmButtonText: 'Update Password',
+        showCancelButton: true,
+        cancelButtonColor: '#d33',
+        inputAttributes: {
+          minlength: 6,
+          autocapitalize: 'off',
+          autocorrect: 'off'
+        }
+      });
+
+      if (!newPassword) return;
+
+      Swal.showLoading();
+      
+      let updateRes = await apiCall('/auth/reset-password', 'POST', { email, newPassword });
+      
+      if (!updateRes && isLocal) {
+        updateRes = { success: true, message: 'Password updated successfully (Simulation).' };
+      }
+
+      if (updateRes && updateRes.success) {
+        Swal.fire({
+          icon: 'success',
+          title: 'Success!',
+          text: updateRes.message,
+          confirmButtonColor: '#0A4D5C'
+        });
+      } else {
+        throw new Error(updateRes?.message || 'Failed to update password');
+      }
+    } else {
+      throw new Error(res?.message || 'Failed to verify email');
+    }
+  } catch (err) {
+    Swal.fire({
+      icon: 'error',
+      title: 'Error',
+      text: err.message || 'Verification failed',
+      confirmButtonColor: '#0A4D5C'
+    });
+  }
+}
+
+window.handleForgotPassword = handleForgotPassword;
+
 window.tripItems = [];
 
 async function loadTrips() {

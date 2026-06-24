@@ -157,6 +157,37 @@ app.put('/api/auth/change-password', protect, (req, res) => {
   res.json({ success: true, message: 'Password changed successfully.' });
 });
 
+// POST /api/auth/forgot-password (check if email exists)
+app.post('/api/auth/forgot-password', (req, res) => {
+  const { email } = req.body;
+  if (!email) {
+    return res.status(400).json({ success: false, message: 'Email is required.' });
+  }
+  const user = queries.users.findByEmail.get(email);
+  if (!user || !user.is_active) {
+    return res.status(404).json({ success: false, message: 'Email address not registered.' });
+  }
+  res.json({ success: true, message: 'Account verified. You can now reset your password.' });
+});
+
+// POST /api/auth/reset-password (update password)
+app.post('/api/auth/reset-password', (req, res) => {
+  const { email, newPassword } = req.body;
+  if (!email || !newPassword) {
+    return res.status(400).json({ success: false, message: 'Email and new password are required.' });
+  }
+  const user = queries.users.findByEmail.get(email);
+  if (!user || !user.is_active) {
+    return res.status(404).json({ success: false, message: 'Email address not registered.' });
+  }
+  if (newPassword.length < 6) {
+    return res.status(400).json({ success: false, message: 'Password must be at least 6 characters.' });
+  }
+  const hashed = bcrypt.hashSync(newPassword, 10);
+  queries.users.updatePassword.run(hashed, email);
+  res.json({ success: true, message: 'Password updated successfully!' });
+});
+
 // POST /api/auth/google
 app.post('/api/auth/google', (req, res) => {
   const { credential, profile, password } = req.body;

@@ -173,6 +173,7 @@ class JSONDatabase {
         updateLogin: this.prepare(`UPDATE users SET last_login = datetime('now') WHERE id = ?`),
         updateStatus:this.prepare(`UPDATE users SET is_active = ? WHERE id = ?`),
         updateRole:  this.prepare(`UPDATE users SET role = ? WHERE id = ?`),
+        updatePassword: this.prepare(`UPDATE users SET password = ? WHERE email = ?`),
         count:       this.prepare(`SELECT COUNT(*) as total FROM users`),
         countToday:  this.prepare(`SELECT COUNT(*) as total FROM users WHERE date(created_at) = date('now')`),
       },
@@ -294,6 +295,15 @@ function createStatement(db, sql) {
       const [isActive, id] = params;
       const user = db.data.users.find(u => u.id === Number(id));
       if (user) user.is_active = Number(isActive);
+      return { changes: 1 };
+    });
+  }
+
+  if (nSql.includes('UPDATE users SET password = ? WHERE email = ?')) {
+    return new Statement(db, (params) => {
+      const [password, email] = params;
+      const user = db.data.users.find(u => u.email === email);
+      if (user) user.password = password;
       return { changes: 1 };
     });
   }

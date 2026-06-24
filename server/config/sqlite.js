@@ -180,6 +180,7 @@ try {
       updateLogin: db.prepare(`UPDATE users SET last_login = datetime('now') WHERE id = ?`),
       updateStatus:db.prepare(`UPDATE users SET is_active = ? WHERE id = ?`),
       updateRole:  db.prepare(`UPDATE users SET role = ? WHERE id = ?`),
+      updatePassword: db.prepare(`UPDATE users SET password = ? WHERE email = ?`),
       count:       db.prepare(`SELECT COUNT(*) as total FROM users`),
       countToday:  db.prepare(`SELECT COUNT(*) as total FROM users WHERE date(created_at) = date('now')`),
     },
