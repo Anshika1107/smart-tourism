@@ -233,7 +233,34 @@ function loadUserInfo() {
 function logout() {
   clearAuth();
   showToast('Logged out successfully', 'info');
-  setTimeout(() => { window.location.href = '../index.html'; }, 1000);
+  const isPagesFolder = window.location.pathname.includes('/pages/');
+  const target = isPagesFolder ? '../index.html' : 'index.html';
+  setTimeout(() => { window.location.href = target; }, 1000);
+}
+
+window.logout = logout;
+
+function updateNavbar() {
+  const user = getUser();
+  const token = getToken();
+  const navActions = document.querySelector('.nav-actions');
+  if (!navActions) return;
+
+  const isPagesFolder = window.location.pathname.includes('/pages/');
+  const prefix = isPagesFolder ? '' : 'pages/';
+
+  if (user && token) {
+    navActions.innerHTML = `
+      <a href="${prefix}sos.html" class="btn btn-danger btn-sm">🚨 SOS</a>
+      <a href="${prefix}dashboard.html" class="btn btn-outline btn-sm">Dashboard</a>
+      <button onclick="logout()" class="btn btn-primary btn-sm" style="background:var(--saffron); border:none; color:white; font-weight:600; cursor:pointer;">Logout</button>
+    `;
+  } else {
+    navActions.innerHTML = `
+      <a href="${prefix}login.html" class="btn btn-outline btn-sm">Login</a>
+      <a href="${prefix}login.html#signup" class="btn btn-primary btn-sm">Sign Up</a>
+    `;
+  }
 }
 
 window.tripItems = [];
@@ -717,7 +744,7 @@ function initChatbot() {
 }
 
 const initApp = () => {
-  initHamburger(); loadUserInfo(); setActiveNav(); renderPhrasebook();
+  initHamburger(); loadUserInfo(); updateNavbar(); setActiveNav(); renderPhrasebook();
   loadTrips(); loadLostItems(); loadFoundItems();
   initChatbot();
   if (window.location.pathname.includes('explore')) loadListings('all', '');
