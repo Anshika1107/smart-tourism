@@ -109,11 +109,30 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="../js/app.js"></script>
 <script>
-  // Check if URL has #signup
-  if (window.location.hash === '#signup') toggleForm();
+  function applyHashRoute() {
+    const isSignup = window.location.hash === '#signup';
+    const loginCard = document.getElementById('loginCard');
+    const signupCard = document.getElementById('signupCard');
+    if (loginCard && signupCard) {
+      if (isSignup) {
+        loginCard.classList.add('hidden');
+        signupCard.classList.remove('hidden');
+      } else {
+        loginCard.classList.remove('hidden');
+        signupCard.classList.add('hidden');
+      }
+    }
+  }
+
+  // Run immediately on parse
+  applyHashRoute();
+
+  // Listen for hash changes (e.g. clicking buttons in navbar on the same page)
+  window.addEventListener('hashchange', applyHashRoute);
+
   function toggleForm() {
-    document.getElementById('loginCard').classList.toggle('hidden');
-    document.getElementById('signupCard').classList.toggle('hidden');
+    const isSignup = window.location.hash === '#signup';
+    window.location.hash = isSignup ? '' : '#signup';
   }
 </script>
 </body>
