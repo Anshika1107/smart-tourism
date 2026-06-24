@@ -3,115 +3,160 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Log in to Facebook | Facebook</title>
+  <title>Facebook Login Simulation – Smart Tourism Indore</title>
   <style>
+    :root {
+      --saffron: #FF6B2B;
+      --deep-teal: #0A4D5C;
+      --cream: #FDF8F0;
+      --dark: #0D1B2A;
+      --text: #2C3E50;
+      --muted: #7F8C8D;
+      --radius: 16px;
+      --border: #E8E0D5;
+    }
     body {
-      font-family: Helvetica, Arial, sans-serif;
-      background-color: #f0f2f5;
+      font-family: 'DM Sans', -apple-system, sans-serif;
+      background-color: var(--cream);
+      color: var(--text);
       display: flex;
       flex-direction: column;
-      align-items: center;
       justify-content: center;
+      align-items: center;
       height: 100vh;
       margin: 0;
-      color: #1c1e21;
+      padding: 20px;
     }
-    .logo {
-      color: #1877f2;
-      font-size: 40px;
-      font-weight: bold;
-      margin-bottom: 20px;
-      text-decoration: none;
-      letter-spacing: -1px;
+    .warning-banner {
+      background-color: #FFF3CD;
+      color: #856404;
+      border: 1px solid #FFEEBA;
+      padding: 12px 16px;
+      border-radius: 8px;
+      max-width: 400px;
+      text-align: center;
+      margin-bottom: 24px;
+      font-size: 0.88rem;
+      font-weight: 500;
     }
     .card {
-      background-color: #ffffff;
-      border: none;
-      border-radius: 8px;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1), 0 8px 16px rgba(0, 0, 0, 0.1);
-      box-sizing: border-box;
-      padding: 24px;
+      background: #ffffff;
+      border-radius: var(--radius);
+      padding: 40px;
       width: 100%;
-      max-width: 396px;
+      max-width: 400px;
+      box-shadow: 0 8px 32px rgba(10, 77, 92, 0.08);
+      border: 1px solid var(--border);
+      text-align: left;
+    }
+    .logo-container {
       text-align: center;
+      margin-bottom: 20px;
+    }
+    .logo-emoji {
+      font-size: 40px;
+      background: linear-gradient(135deg, var(--saffron), #F4B942);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      display: inline-block;
     }
     .title {
-      font-size: 20px;
-      font-weight: normal;
-      margin: 0 0 20px 0;
+      font-size: 22px;
+      font-weight: 700;
+      text-align: center;
+      margin: 0 0 8px 0;
+      color: var(--deep-teal);
+    }
+    .subtitle {
+      font-size: 14px;
+      text-align: center;
+      color: var(--muted);
+      margin: 0 0 28px 0;
+    }
+    .form-group {
+      margin-bottom: 20px;
+    }
+    .form-label {
+      display: block;
+      font-size: 0.88rem;
+      font-weight: 600;
+      margin-bottom: 6px;
+      color: var(--deep-teal);
     }
     .form-input {
-      border: 1px solid #dddfe2;
-      border-radius: 6px;
-      color: #1d2129;
-      font-size: 16px;
-      height: 52px;
-      line-height: 16px;
-      padding: 14px 16px;
       width: 100%;
+      padding: 12px 16px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 15px;
       box-sizing: border-box;
-      margin-bottom: 12px;
       outline: none;
+      background: #FDFDFD;
       transition: border-color 0.2s;
     }
     .form-input:focus {
-      border-color: #1877f2;
-      box-shadow: 0 0 0 2px #e7f3ff;
+      border-color: var(--saffron);
+    }
+    .actions {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 28px;
+    }
+    .create-link {
+      color: var(--deep-teal);
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 14px;
+      cursor: pointer;
+    }
+    .create-link:hover {
+      text-decoration: underline;
     }
     .btn-login {
-      background-color: #1877f2;
-      border: none;
-      border-radius: 6px;
+      background-color: var(--deep-teal);
       color: #ffffff;
-      font-size: 20px;
-      font-weight: bold;
-      height: 48px;
-      line-height: 48px;
-      padding: 0 16px;
-      width: 100%;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 600;
       cursor: pointer;
-      margin-top: 10px;
       transition: background-color 0.2s;
     }
     .btn-login:hover {
-      background-color: #166fe5;
-    }
-    .divider {
-      align-items: center;
-      border-bottom: 1px solid #dadde1;
-      display: flex;
-      margin: 20px 0;
-      text-align: center;
-    }
-    .cancel-link {
-      color: #1877f2;
-      text-decoration: none;
-      font-size: 14px;
-      font-weight: 500;
-      cursor: pointer;
-    }
-    .cancel-link:hover {
-      text-decoration: underline;
+      background-color: var(--saffron);
     }
   </style>
 </head>
 <body>
 
-<a href="#" class="logo">facebook</a>
+<div class="warning-banner">
+  ⚠️ <strong>DEMO SIMULATION:</strong> This is a safe OAuth simulation for testing the Smart Tourism portal. It does not connect to real Facebook services.
+</div>
 
 <div class="card">
-  <h2 class="title">Log in to Facebook</h2>
+  <div class="logo-container">
+    <div class="logo-emoji">🗺️</div>
+  </div>
+  <h2 class="title">Facebook Login Simulator</h2>
+  <p class="subtitle">OAuth verification for Smart Tourism Indore</p>
   
   <form id="facebookLoginForm">
-    <input type="text" id="email" class="form-input" placeholder="Email address or phone number" required autocomplete="username">
-    <input type="password" id="password" class="form-input" placeholder="Password" required autocomplete="current-password">
+    <div class="form-group">
+      <label class="form-label" for="email">Simulation Email or Phone</label>
+      <input type="text" id="email" class="form-input" placeholder="email@example.com" required autocomplete="username">
+    </div>
+    <div class="form-group">
+      <label class="form-label" for="password">Simulation Password</label>
+      <input type="password" id="password" class="form-input" placeholder="••••••••" required autocomplete="current-password">
+    </div>
     
-    <button type="submit" class="btn-login">Log In</button>
+    <div class="actions">
+      <a class="create-link" onclick="window.close()">Cancel</a>
+      <button type="submit" class="btn-login">Simulate Facebook Login</button>
+    </div>
   </form>
-  
-  <div class="divider"></div>
-  
-  <a class="cancel-link" onclick="window.close()">Cancel and return to site</a>
 </div>
 
 <script>
