@@ -6,6 +6,21 @@ const setUser  = (u) => localStorage.setItem('sts_user', JSON.stringify(u));
 const getUser  = () => JSON.parse(localStorage.getItem('sts_user') || 'null');
 const clearAuth = () => { localStorage.removeItem('sts_token'); localStorage.removeItem('sts_user'); };
 
+// ─── ROUTE PROTECTION ─────────────────────────────────────────
+(function() {
+  const path = window.location.pathname;
+  const isLoginPage = path.includes('login.html') || path.includes('google-login.html') || path.includes('facebook-login.html');
+  const token = getToken();
+  const user = getUser();
+  
+  if (!isLoginPage) {
+    if (!token || !user) {
+      const loginUrl = path.includes('/pages/') ? 'login.html' : 'pages/login.html';
+      window.location.href = loginUrl;
+    }
+  }
+})();
+
 async function apiCall(endpoint, method = 'GET', body = null, auth = false) {
   const headers = { 'Content-Type': 'application/json' };
   if (auth) { const token = getToken(); if (token) headers['Authorization'] = `Bearer ${token}`; }
@@ -52,7 +67,30 @@ async function handleLogin(e) {
   const btn = e.target.querySelector('[type=submit]');
   if (btn) { btn.disabled = true; btn.textContent = 'Logging in...'; }
   try {
-    const data = await apiCall('/auth/login', 'POST', { email, password });
+    let data = await apiCall('/auth/login', 'POST', { email, password });
+    
+    // Offline Simulation fallback for development
+    const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+    if (!data && isLocal) {
+      if (email === 'admin@smarttourism.in' && password === 'admin123') {
+        data = {
+          success: true,
+          message: 'Offline Admin login successful! (Simulation)',
+          token: 'offline-admin-token',
+          user: { name: 'Admin User', email: 'admin@smarttourism.in', role: 'admin' }
+        };
+      } else if (password === 'password123') {
+        data = {
+          success: true,
+          message: 'Offline Tourist login successful! (Simulation)',
+          token: 'offline-tourist-token',
+          user: { name: 'Demo Tourist', email: email, role: 'tourist' }
+        };
+      } else {
+        throw new Error('Invalid email or password (Offline simulation). Try password123 or admin123.');
+      }
+    }
+
     if (data && data.success) { 
       setToken(data.token); 
       setUser(data.user); 
@@ -87,7 +125,19 @@ async function handleSignup(e) {
   const btn = e.target.querySelector('[type=submit]');
   if (btn) { btn.disabled = true; btn.textContent = 'Creating account...'; }
   try {
-    const data = await apiCall('/auth/signup', 'POST', { name, email, password, phone });
+    let data = await apiCall('/auth/signup', 'POST', { name, email, password, phone });
+    
+    // Offline Simulation fallback for development
+    const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+    if (!data && isLocal) {
+      data = {
+        success: true,
+        message: 'Offline registration successful! (Simulation)',
+        token: 'offline-tourist-token',
+        user: { name, email, role: 'tourist' }
+      };
+    }
+
     if (data && data.success) { 
       setToken(data.token); 
       setUser(data.user); 

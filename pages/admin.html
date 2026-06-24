@@ -19,43 +19,8 @@
       }
 
       if (!token || !user || user.role !== 'admin') {
-        const password = prompt('Access Denied: Restricted Area. Please enter the Admin Password to proceed:');
-        if (password === 'admin123') {
-          const API_BASE = isLocal ? 'http://localhost:5000' : '';
-          // Authenticate programmatically to fetch a valid JWT token
-          fetch(`${API_BASE}/api/auth/login`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ email: 'admin@smarttourism.in', password: 'admin123' })
-          })
-          .then(res => res.json())
-          .then(data => {
-            if (data.success) {
-              localStorage.setItem('sts_token', data.token);
-              localStorage.setItem('sts_user', JSON.stringify(data.user));
-              alert('Admin access granted!');
-              window.location.reload();
-            } else {
-              alert('Authentication failed.');
-              window.location.href = 'login.html';
-            }
-          })
-          .catch(err => {
-            if (isLocal) {
-              // Fallback for local offline simulation only
-              localStorage.setItem('sts_token', 'offline-admin-token');
-              localStorage.setItem('sts_user', JSON.stringify({ name: 'Admin User', email: 'admin@smarttourism.in', role: 'admin' }));
-              alert('Offline Admin access granted!');
-              window.location.reload();
-            } else {
-              alert('Connection failed. Server may be offline or starting up. Please try again.');
-              window.location.href = 'login.html';
-            }
-          });
-        } else {
-          alert('Invalid password. Access denied.');
-          window.location.href = 'login.html';
-        }
+        alert('Access Denied: Restricted Area. Admin login required.');
+        window.location.href = 'login.html';
       }
     })();
   </script>
